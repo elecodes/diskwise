@@ -48,3 +48,33 @@ When you finish a meaningful change:
 2. Update `ARCHITECTURE.md` if you added or altered structural elements.
 3. Add or update an ADR in `docs/adr/` for important design decisions.
 4. Consider adding a new skill or updating an existing one in `skills/` if the workflow is reusable.
+
+---
+
+## 6. Running the System (Operations Guide)
+
+To ensure consistency, follow these procedures to run the different components of **diskwise**.
+
+### A. The CLI Tool
+Use the CLI for quick scans and security checks on specific paths.
+1.  Navigate to the module: `cd diskwise`
+2.  Set path: `export PYTHONPATH=.`
+3.  Execute: `python3 cli/main.py scan --path /tmp` (or `check`)
+
+### B. The REST API
+The API must be running for the Web Dashboard to function.
+1.  Navigate to the module: `cd diskwise`
+2.  Set path: `export PYTHONPATH=.`
+3.  Start server: `python3 api/main.py`
+4.  Default URL: `http://localhost:8000`
+
+### C. The Web Dashboard
+The frontend interface for visual analysis.
+1.  Navigate to the app: `cd app`
+2.  Install dependencies (first time only): `npm install`
+3.  Start dev server: `npm run dev`
+4.  Default URL: `http://localhost:5173/`
+
+### D. Maintenance & Logs
+- **Cleanup**: The tool creates `__pycache__` folders and `.pyc` files when running. These are automatically ignored by git but can be cleared using the tool itself.
+- **Port Conflicts**: If port 8000 or 5173 is busy, ensure you close previous instances of the server before restarting.

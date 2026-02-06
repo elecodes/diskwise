@@ -167,11 +167,11 @@ export function DashboardDemo() {
         </div>
 
         {/* Dashboard */}
-        <div className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-200 bg-[#0a0a0a] rounded-2xl border border-white/10 overflow-hidden">
+        <div className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-200 bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl glass-reflection">
           {/* Dashboard Header */}
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/10 gap-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/10 gap-4 bg-white/[0.01]">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#ff6b35] flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-[#ff6b35] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,53,0.3)] shimmer">
                 <FolderOpen className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -182,10 +182,10 @@ export function DashboardDemo() {
             <button
               onClick={handleScan}
               disabled={isScanning}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ff6b35]/10 text-[#ff6b35] hover:bg-[#ff6b35]/20 transition-colors disabled:opacity-50"
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ff6b35]/10 text-[#ff6b35] border border-[#ff6b35]/20 hover:bg-[#ff6b35]/20 transition-all disabled:opacity-50 shimmer ${!isScanning ? 'glass-reflection' : ''}`}
             >
               <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
-              {isScanning ? 'Scanning...' : 'Rescan'}
+              {isScanning ? 'Scanning...' : 'Rescan System'}
             </button>
           </div>
 
@@ -256,7 +256,7 @@ export function DashboardDemo() {
                 {filteredFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/[0.04] backdrop-blur-0 hover:backdrop-blur-md transition-all duration-300 border-b border-white/5 last:border-0 group cursor-default transform hover:scale-[1.002]"
                   >
                     <div className="col-span-1">
                       <button
@@ -291,19 +291,19 @@ export function DashboardDemo() {
 
               {/* Action Bar */}
               {selectedFiles.size > 0 && (
-                <div className="mt-4 p-4 rounded-xl bg-[#ff6b35]/10 border border-[#ff6b35]/30 flex items-center justify-between">
+                <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-[#ff6b35]/20 to-[#ff6b35]/10 border border-[#ff6b35]/30 flex items-center justify-between shadow-lg shadow-[#ff6b35]/5 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="text-sm">
-                    <span className="text-white font-medium">{selectedFiles.size}</span>
-                    <span className="text-gray-400"> items selected (</span>
-                    <FileSize bytes={selectedSize} className="text-[#ff6b35] inline" />
-                    <span className="text-gray-400">)</span>
+                    <span className="text-white font-semibold">{selectedFiles.size}</span>
+                    <span className="text-gray-300 ml-1">items selected (</span>
+                    <FileSize bytes={selectedSize} className="text-[#ff6b35] font-bold inline" />
+                    <span className="text-gray-300">)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/20 text-green-500 hover:bg-green-500/30 transition-colors text-sm">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 transition-all font-medium text-sm">
                       <Minimize2 className="w-4 h-4" />
                       Compress
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/20 text-red-500 hover:bg-red-500/30 transition-colors text-sm">
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-all font-medium text-sm">
                       <Trash2 className="w-4 h-4" />
                       Delete
                     </button>

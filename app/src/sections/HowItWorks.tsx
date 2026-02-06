@@ -8,7 +8,7 @@ const steps = [
     title: 'Scan Your Disk',
     description:
       'Select folders to scan. DiskWise analyzes every file with intelligent classification, identifying what\'s taking up space.',
-    color: '#ff6b35',
+    color: '#f59e0b',
   },
   {
     number: '02',
@@ -61,7 +61,7 @@ export function HowItWorks() {
       className="relative py-32 bg-black overflow-hidden"
     >
       {/* Background Gradient */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full bg-[#ff6b35]/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] rounded-full bg-[#f59e0b]/5 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}

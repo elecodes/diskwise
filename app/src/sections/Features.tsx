@@ -7,14 +7,14 @@ const features = [
     title: 'Intelligent Scanning',
     description:
       'Advanced algorithms identify safe-to-delete files with 99.9% accuracy. No more guessing what\'s safe to remove.',
-    color: '#ff6b35',
+    color: '#f59e0b',
   },
   {
     icon: Shield,
     title: 'Safe to Delete',
     description:
       'Color-coded safety indicators show exactly what\'s safe to delete, what needs review, and what to keep.',
-    color: '#4caf50',
+    color: '#10b981',
   },
   {
     icon: Archive,
@@ -66,7 +66,7 @@ export function Features() {
       className="relative py-32 bg-black overflow-hidden"
     >
       {/* Background Accent */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#ff6b35]/5 blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] rounded-full bg-[#f59e0b]/5 blur-3xl pointer-events-none" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
@@ -92,7 +92,7 @@ export function Features() {
                   transitionDelay: `${index * 100}ms`,
                 }}
               >
-                <div className="relative h-full p-8 rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-[#ff6b35]/50 transition-all duration-300 card-hover">
+                <div className="relative h-full p-8 rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-[#f59e0b]/50 transition-all duration-300 card-hover">
                   {/* Icon */}
                   <div
                     className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
@@ -128,9 +128,9 @@ export function Features() {
         >
           <defs>
             <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#ff6b35" stopOpacity="0" />
-              <stop offset="50%" stopColor="#ff6b35" stopOpacity="0.5" />
-              <stop offset="100%" stopColor="#ff6b35" stopOpacity="0" />
+              <stop offset="0%" stopColor="#f59e0b" stopOpacity="0" />
+              <stop offset="50%" stopColor="#f59e0b" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#f59e0b" stopOpacity="0" />
             </linearGradient>
           </defs>
         </svg>

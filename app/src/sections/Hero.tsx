@@ -52,11 +52,11 @@ export function Hero() {
           <div className="text-center lg:text-left">
             {/* Badge */}
             <div
-              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#ff6b35]/10 border border-[#ff6b35]/30 mb-6"
+              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#f59e0b]/10 border border-[#f59e0b]/30 mb-6"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
-              <Sparkles className="w-4 h-4 text-[#ff6b35]" />
-              <span className="text-sm text-[#ff6b35]">Free Disk Cleanup Tool</span>
+              <Sparkles className="w-4 h-4 text-[#f59e0b]" />
+              <span className="text-sm text-[#f59e0b]">Free Disk Cleanup Tool</span>
             </div>
 
             {/* Headline */}
@@ -124,7 +124,7 @@ export function Hero() {
               {/* Main Circle */}
               <div className="relative w-80 h-80 mx-auto">
                 {/* Outer Ring */}
-                <div className="absolute inset-0 rounded-full border-2 border-[#ff6b35]/20" />
+                <div className="absolute inset-0 rounded-full border-2 border-[#f59e0b]/20" />
                 
                 {/* Progress Ring */}
                 <svg className="absolute inset-0 w-full h-full -rotate-90">
@@ -141,7 +141,7 @@ export function Hero() {
                     cy="160"
                     r="150"
                     fill="none"
-                    stroke="#ff6b35"
+                    stroke="#f59e0b"
                     strokeWidth="12"
                     strokeLinecap="round"
                     strokeDasharray={`${0.75 * 2 * Math.PI * 150} ${2 * Math.PI * 150}`}
@@ -153,20 +153,20 @@ export function Hero() {
                 <div className="absolute inset-8 rounded-full bg-gradient-to-br from-[#1a1a1a] to-black flex flex-col items-center justify-center">
                   <span className="text-6xl font-bold text-white">75%</span>
                   <span className="text-gray-400 mt-2">Disk Used</span>
-                  <div className="mt-4 px-4 py-1 rounded-full bg-green-500/20 text-green-500 text-sm">
+                  <div className="mt-4 px-4 py-1 rounded-full bg-[#10b981]/20 text-[#10b981] text-sm">
                     12GB Safe to Delete
                   </div>
                 </div>
               </div>
 
               {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-xl bg-[#1a1a1a] border border-[#ff6b35]/30 flex flex-col items-center justify-center animate-float-slow">
-                <span className="text-2xl font-bold text-[#ff6b35]">2.1</span>
+              <div className="absolute -top-4 -right-4 w-20 h-20 rounded-xl bg-[#1a1a1a] border border-[#f59e0b]/30 flex flex-col items-center justify-center animate-float-slow">
+                <span className="text-2xl font-bold text-[#f59e0b]">2.1</span>
                 <span className="text-xs text-gray-400">GB Cache</span>
               </div>
 
-              <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-xl bg-[#1a1a1a] border border-green-500/30 flex flex-col items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
-                <span className="text-2xl font-bold text-green-500">8.5</span>
+              <div className="absolute -bottom-4 -left-4 w-24 h-24 rounded-xl bg-[#1a1a1a] border border-[#10b981]/30 flex flex-col items-center justify-center animate-float" style={{ animationDelay: '1s' }}>
+                <span className="text-2xl font-bold text-[#10b981]">8.5</span>
                 <span className="text-xs text-gray-400">GB Temp</span>
               </div>
 

@@ -31,7 +31,7 @@ export function Navigation() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-10 h-10 rounded-lg bg-[#ff6b35] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-lg bg-[#f59e0b] flex items-center justify-center">
               <HardDrive className="w-6 h-6 text-white" />
             </div>
             <span className="text-xl font-bold text-white">DiskWise</span>
@@ -50,7 +50,7 @@ export function Navigation() {
                 className="relative text-white/80 hover:text-white transition-colors duration-200 group"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-[#ff6b35] transition-all duration-200 group-hover:w-full group-hover:left-0" />
+                <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-[#f59e0b] transition-all duration-200 group-hover:w-full group-hover:left-0" />
               </button>
             ))}
           </div>

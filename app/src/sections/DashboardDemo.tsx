@@ -171,7 +171,7 @@ export function DashboardDemo() {
           {/* Dashboard Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/10 gap-4 bg-white/[0.01]">
             <div className="flex items-center gap-4">
-              <div className="w-10 h-10 rounded-lg bg-[#ff6b35] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,53,0.3)] shimmer">
+              <div className="w-10 h-10 rounded-lg bg-[#f59e0b] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,53,0.3)] shimmer">
                 <FolderOpen className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -182,7 +182,7 @@ export function DashboardDemo() {
             <button
               onClick={handleScan}
               disabled={isScanning}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#ff6b35]/10 text-[#ff6b35] border border-[#ff6b35]/20 hover:bg-[#ff6b35]/20 transition-all disabled:opacity-50 shimmer ${!isScanning ? 'glass-reflection' : ''}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-all disabled:opacity-50 shimmer ${!isScanning ? 'glass-reflection' : ''}`}
             >
               <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
               {isScanning ? 'Scanning...' : 'Rescan System'}
@@ -226,7 +226,7 @@ export function DashboardDemo() {
                       onClick={() => setFilter(f)}
                       className={`px-3 py-1.5 rounded-lg text-sm capitalize transition-colors ${
                         filter === f
-                          ? 'bg-[#ff6b35] text-white'
+                          ? 'bg-[#f59e0b] text-white'
                           : 'bg-white/5 text-gray-400 hover:bg-white/10'
                       }`}
                     >
@@ -261,10 +261,10 @@ export function DashboardDemo() {
                     <div className="col-span-1">
                       <button
                         onClick={() => toggleFile(file.id)}
-                        className="text-gray-400 hover:text-[#ff6b35] transition-colors"
+                        className="text-gray-400 hover:text-[#f59e0b] transition-colors"
                       >
                         {selectedFiles.has(file.id) ? (
-                          <CheckSquare className="w-4 h-4 text-[#ff6b35]" />
+                          <CheckSquare className="w-4 h-4 text-[#f59e0b]" />
                         ) : (
                           <Square className="w-4 h-4" />
                         )}
@@ -272,7 +272,7 @@ export function DashboardDemo() {
                     </div>
                     <div className="col-span-5 flex items-center gap-2">
                       {file.type === 'directory' ? (
-                        <FolderOpen className="w-4 h-4 text-[#ff6b35]" />
+                        <FolderOpen className="w-4 h-4 text-[#f59e0b]" />
                       ) : (
                         <FileText className="w-4 h-4 text-gray-500" />
                       )}
@@ -291,11 +291,11 @@ export function DashboardDemo() {
 
               {/* Action Bar */}
               {selectedFiles.size > 0 && (
-                <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-[#ff6b35]/20 to-[#ff6b35]/10 border border-[#ff6b35]/30 flex items-center justify-between shadow-lg shadow-[#ff6b35]/5 animate-in fade-in slide-in-from-bottom-2 duration-300">
+                <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-[#f59e0b]/20 to-[#f59e0b]/10 border border-[#f59e0b]/30 flex items-center justify-between shadow-lg shadow-[#f59e0b]/5 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="text-sm">
                     <span className="text-white font-semibold">{selectedFiles.size}</span>
                     <span className="text-gray-300 ml-1">items selected (</span>
-                    <FileSize bytes={selectedSize} className="text-[#ff6b35] font-bold inline" />
+                    <FileSize bytes={selectedSize} className="text-[#f59e0b] font-bold inline" />
                     <span className="text-gray-300">)</span>
                   </div>
                   <div className="flex items-center gap-2">

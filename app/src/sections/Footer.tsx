@@ -7,7 +7,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Logo */}
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-[#ff6b35] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-lg bg-[#f59e0b] flex items-center justify-center">
               <HardDrive className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold text-white">DiskWise</span>
@@ -19,10 +19,10 @@ export function Footer() {
               <a
                 key={link}
                 href="#"
-                className="text-sm text-gray-400 hover:text-[#ff6b35] transition-colors relative group"
+                className="text-sm text-gray-400 hover:text-[#f59e0b] transition-colors relative group"
               >
                 {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#ff6b35] transition-all duration-200 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f59e0b] transition-all duration-200 group-hover:w-full" />
               </a>
             ))}
           </div>

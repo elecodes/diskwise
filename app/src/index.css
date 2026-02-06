@@ -10,24 +10,25 @@
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 5%;
     --popover-foreground: 0 0% 100%;
-    --primary: 17 100% 60%;
+    --primary: 38 92% 50%;
     --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 100%;
     --muted: 0 0% 15%;
     --muted-foreground: 0 0% 69%;
-    --accent: 17 100% 60%;
+    --accent: 160 84% 39%;
     --accent-foreground: 0 0% 100%;
     --destructive: 0 70% 50%;
     --destructive-foreground: 0 0% 100%;
     --border: 0 0% 20%;
     --input: 0 0% 15%;
-    --ring: 17 100% 60%;
+    --ring: 38 92% 50%;
     --radius: 0.5rem;
     
     /* Custom colors */
-    --accent-orange: #ff6b35;
-    --success-green: #4caf50;
+    --accent-amber: #f59e0b;
+    --accent-emerald: #10b981;
+    --success-green: #10b981;
     --warning-yellow: #ffc107;
     --danger-red: #f44336;
     --info-blue: #2196f3;
@@ -62,7 +63,7 @@
 @layer components {
   .text-gradient {
     @apply bg-clip-text text-transparent;
-    background-image: linear-gradient(135deg, #ff6b35 0%, #ff8f5a 100%);
+    background-image: linear-gradient(135deg, #f59e0b 0%, #10b981 100%);
   }
   
   .glow-orange {
@@ -87,7 +88,7 @@
   }
   
   .btn-primary {
-    @apply px-8 py-4 bg-[#ff6b35] text-white font-semibold rounded-lg transition-all duration-300;
+    @apply px-8 py-4 bg-[#f59e0b] text-white font-semibold rounded-lg transition-all duration-300;
   }
   
   .btn-primary:hover {
@@ -100,7 +101,7 @@
   }
   
   .btn-secondary:hover {
-    @apply border-[#ff6b35] text-[#ff6b35] scale-105;
+    @apply border-[#f59e0b] text-[#f59e0b] scale-105;
   }
   
   .safety-safe {
@@ -158,10 +159,10 @@
 
 @keyframes pulse-glow {
   0%, 100% {
-    box-shadow: 0 0 20px rgba(255, 107, 53, 0.3);
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
   }
   50% {
-    box-shadow: 0 0 40px rgba(255, 107, 53, 0.6);
+    box-shadow: 0 0 40px rgba(16, 185, 129, 0.6);
   }
 }
 
@@ -288,7 +289,7 @@
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #ff6b35;
+  background: #f59e0b;
 }
 
 ::-webkit-scrollbar-thumb:active {

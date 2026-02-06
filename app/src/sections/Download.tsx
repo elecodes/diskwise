@@ -84,7 +84,7 @@ export function DownloadSection() {
               key={feature}
               className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 text-sm text-gray-300"
             >
-              <Check className="w-4 h-4 text-[#ff6b35]" />
+              <Check className="w-4 h-4 text-[#f59e0b]" />
               {feature}
             </div>
           ))}
@@ -101,11 +101,11 @@ export function DownloadSection() {
             onMouseLeave={() => setIsHovered(false)}
           >
             <div
-              className={`absolute inset-0 rounded-xl bg-[#ff6b35] blur-xl transition-opacity duration-300 ${
+              className={`absolute inset-0 rounded-xl bg-[#f59e0b] blur-xl transition-opacity duration-300 ${
                 isHovered ? 'opacity-60' : 'opacity-30'
               }`}
             />
-            <div className="relative px-12 py-5 rounded-xl bg-[#ff6b35] text-white font-bold text-lg flex items-center gap-3 transition-transform duration-300 group-hover:scale-105">
+            <div className="relative px-12 py-5 rounded-xl bg-[#f59e0b] text-white font-bold text-lg flex items-center gap-3 transition-transform duration-300 group-hover:scale-105">
               <Download className="w-6 h-6" />
               Download Now
             </div>
@@ -127,8 +127,8 @@ export function DownloadSection() {
                   key={platform.label}
                   className="group flex flex-col items-center gap-2"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center transition-all duration-300 group-hover:bg-[#ff6b35]/20 group-hover:scale-110">
-                    <Icon className="w-6 h-6 text-gray-400 transition-colors duration-300 group-hover:text-[#ff6b35]" />
+                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center transition-all duration-300 group-hover:bg-[#f59e0b]/20 group-hover:scale-110">
+                    <Icon className="w-6 h-6 text-gray-400 transition-colors duration-300 group-hover:text-[#f59e0b]" />
                   </div>
                   <div className="text-center">
                     <p className="text-sm text-gray-300">{platform.label}</p>

@@ -43,6 +43,10 @@ FRONTEND_PID=$!
 echo -e "${BLUE}Both services are running!${NC}"
 echo -e "Backend: http://localhost:8000"
 echo -e "Frontend: http://localhost:5173"
+echo -e "\n${BLUE}To use the CLI in another terminal:${NC}"
+echo -e "  export PYTHONPATH=\"\$PYTHONPATH:\$ROOT_DIR/diskwise\""
+echo -e "  python3 diskwise/cli/main.py scan ~/Downloads"
+echo -e "  python3 diskwise/cli/main.py delete ~/Downloads/temp.txt"
 
 # Keep script running
 wait

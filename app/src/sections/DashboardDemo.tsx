@@ -91,22 +91,27 @@ export function DashboardDemo() {
 
     if (!confirm(`Are you sure you want to delete ${paths.length} items? This action cannot be undone.`)) return;
 
+    const toastId = toast.loading(paths.length === 1 
+      ? `deleting "${paths[0].split('/').pop()}"...`
+      : `deleting ${paths.length} items...`
+    );
+
     setIsScanning(true);
     try {
       const result = await api.deleteItems(paths);
       if (result.status === 'success') {
         if (result.deleted.length === 1) {
           const fileName = result.deleted[0].split('/').pop();
-          toast.success(`file "${fileName}" deleted`);
+          toast.success(`file "${fileName}" has been deleted`, { id: toastId });
         } else {
-          toast.success(`Successfully deleted ${result.deleted.length} items`);
+          toast.success(`Successfully deleted ${result.deleted.length} items`, { id: toastId });
         }
       } else if (result.errors?.length > 0) {
-        toast.error(`Failed to delete some items: ${result.errors[0].error}`);
+        toast.error(`Failed to delete some items: ${result.errors[0].error}`, { id: toastId });
       }
       handleScan();
     } catch (err: any) {
-      toast.error(err.message || 'Deletion failed');
+      toast.error(err.message || 'Deletion failed', { id: toastId });
     } finally {
       setIsScanning(false);
     }

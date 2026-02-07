@@ -184,9 +184,10 @@ def run_delete(args):
         print(f"[DRY RUN] Would delete: {target_path}")
         return
 
+    print(f"deleting \"{target_path.name}\"...")
     try:
         if delete_path(str(target_path), force=args.force):
-            print(f"file \"{target_path.name}\" deleted")
+            print(f"file \"{target_path.name}\" has been deleted")
         else:
             print(f"Failed to delete \"{target_path.name}\"")
     except Exception as e:

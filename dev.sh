@@ -18,6 +18,11 @@ cleanup() {
 trap cleanup SIGINT
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$ROOT_DIR"
+
+# Install Python dependencies if needed
+echo -e "${GREEN}Checking Python dependencies...${NC}"
+pip install -r ./requirements.txt --quiet
 
 # Start Backend API
 echo -e "${GREEN}Starting Backend API (FastAPI)...${NC}"

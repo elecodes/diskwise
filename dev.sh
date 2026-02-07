@@ -27,7 +27,7 @@ pip install -r ./requirements.txt --quiet
 # Start Backend API
 echo -e "${GREEN}Starting Backend API (FastAPI)...${NC}"
 cd "$ROOT_DIR"
-export PYTHONPATH=$PYTHONPATH:$ROOT_DIR/diskwise
+export PYTHONPATH="$PYTHONPATH:$ROOT_DIR/diskwise"
 python3 diskwise/api/main.py &
 BACKEND_PID=$!
 

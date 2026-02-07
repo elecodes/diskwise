@@ -19,6 +19,7 @@ import { FileDetails } from '@/components/FileDetails';
 
 export function DashboardDemo() {
   const [isScanning, setIsScanning] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
   const [diskUsage, setDiskUsage] = useState<DiskUsage | null>(null);
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [filter, setFilter] = useState<'all' | 'safe' | 'warning' | 'danger'>('all');
@@ -96,7 +97,7 @@ export function DashboardDemo() {
       : `deleting ${paths.length} items...`
     );
 
-    setIsScanning(true);
+    setIsDeleting(true);
     try {
       const result = await api.deleteItems(paths);
       if (result.status === 'success') {
@@ -113,7 +114,7 @@ export function DashboardDemo() {
     } catch (err: any) {
       toast.error(err.message || 'Deletion failed', { id: toastId });
     } finally {
-      setIsScanning(false);
+      setIsDeleting(false);
     }
   };
 
@@ -227,12 +228,12 @@ export function DashboardDemo() {
             </div>
             <button
               onClick={handleScan}
-              disabled={isScanning}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-[background-color,opacity] disabled:opacity-50 shimmer outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] ${!isScanning ? 'glass-reflection' : ''}`}
-              aria-label={isScanning ? "Scanning in progress" : "Rescan System"}
+              disabled={isScanning || isDeleting}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-[background-color,opacity] disabled:opacity-50 shimmer outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] ${!isScanning && !isDeleting ? 'glass-reflection' : ''}`}
+              aria-label={isScanning ? "Scanning in progress" : isDeleting ? "Deleting in progress" : "Rescan System"}
             >
-              <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} aria-hidden="true" />
-              {isScanning ? 'Scanning…' : 'Rescan System'}
+              <RefreshCw className={`w-4 h-4 ${isScanning || isDeleting ? 'animate-spin' : ''}`} aria-hidden="true" />
+              {isScanning ? 'Scanning…' : isDeleting ? 'Deleting…' : 'Rescan System'}
             </button>
           </div>
 

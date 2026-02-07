@@ -52,7 +52,7 @@ export function Hero() {
           <div className="text-center lg:text-left">
             {/* Badge */}
             <div
-              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#f59e0b]/10 border border-[#f59e0b]/30 mb-6"
+              className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-100 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#f59e0b]/10 border border-[#f59e0b]/30 mb-6"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
               <Sparkles className="w-4 h-4 text-[#f59e0b]" />
@@ -60,7 +60,7 @@ export function Hero() {
             </div>
 
             {/* Headline */}
-            <h1 className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-200 text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
+            <h1 className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-200 text-5xl sm:text-6xl lg:text-7xl font-bold text-white mb-6 leading-tight">
               Clean Your{' '}
               <span className="text-gradient">Disk</span>
               <br />
@@ -69,7 +69,7 @@ export function Hero() {
 
             {/* Subheadline */}
             <p
-              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-300 text-lg sm:text-xl text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0"
+              className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-300 text-lg sm:text-xl text-gray-400 mb-8 max-w-xl mx-auto lg:mx-0"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
               Powerful, intelligent disk cleanup that knows what to keep and what to
@@ -78,7 +78,7 @@ export function Hero() {
 
             {/* CTA Buttons */}
             <div
-              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-400 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
+              className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-400 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
               <button
@@ -99,7 +99,7 @@ export function Hero() {
 
             {/* Stats */}
             <div
-              className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-500 mt-12 grid grid-cols-3 gap-6"
+              className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-500 mt-12 grid grid-cols-3 gap-6"
               style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
             >
               {[
@@ -117,7 +117,7 @@ export function Hero() {
 
           {/* Right: Visual */}
           <div
-            className="reveal opacity-0 translate-x-12 transition-all duration-1000 delay-600 relative hidden lg:block"
+            className="reveal opacity-0 translate-x-12 transition-[opacity,transform] duration-1000 delay-600 relative hidden lg:block"
             style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
           >
             <div className="relative animate-float">
@@ -145,7 +145,7 @@ export function Hero() {
                     strokeWidth="12"
                     strokeLinecap="round"
                     strokeDasharray={`${0.75 * 2 * Math.PI * 150} ${2 * Math.PI * 150}`}
-                    className="transition-all duration-1000"
+                    className="transition-[stroke-dasharray] duration-1000"
                   />
                 </svg>
 
@@ -154,7 +154,7 @@ export function Hero() {
                   <span className="text-6xl font-bold text-white">75%</span>
                   <span className="text-gray-400 mt-2">Disk Used</span>
                   <div className="mt-4 px-4 py-1 rounded-full bg-[#10b981]/20 text-[#10b981] text-sm">
-                    12GB Safe to Delete
+                    12&nbsp;GB Safe to Delete
                   </div>
                 </div>
               </div>

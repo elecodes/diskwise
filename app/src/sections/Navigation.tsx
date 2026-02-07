@@ -23,7 +23,7 @@ export function Navigation() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-[padding,background-color] duration-300 ${
         isScrolled ? 'glass py-3' : 'bg-transparent py-5'
       }`}
     >
@@ -47,10 +47,10 @@ export function Navigation() {
               <button
                 key={item.id}
                 onClick={() => scrollToSection(item.id)}
-                className="relative text-white/80 hover:text-white transition-colors duration-200 group"
+                className="relative text-white/80 hover:text-white transition-colors duration-200 group outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-offset-4 focus-visible:ring-offset-black rounded-sm"
               >
                 {item.label}
-                <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-[#f59e0b] transition-all duration-200 group-hover:w-full group-hover:left-0" />
+                <span className="absolute -bottom-1 left-1/2 w-0 h-0.5 bg-[#f59e0b] transition-[width,left] duration-200 group-hover:w-full group-hover:left-0" />
               </button>
             ))}
           </div>
@@ -60,6 +60,7 @@ export function Navigation() {
             <button
               onClick={() => scrollToSection('download')}
               className="btn-primary text-sm"
+              aria-label="Download DiskWise now"
             >
               Download Now
             </button>
@@ -67,10 +68,12 @@ export function Navigation() {
 
           {/* Mobile Menu Button */}
           <button
-            className="md:hidden text-white p-2"
+            className="md:hidden text-white p-2 outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] rounded-lg"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            aria-label={isMobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={isMobileMenuOpen}
           >
-            {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            {isMobileMenuOpen ? <X size={24} aria-hidden="true" /> : <Menu size={24} aria-hidden="true" />}
           </button>
         </div>
 
@@ -87,7 +90,7 @@ export function Navigation() {
                 <button
                   key={item.id}
                   onClick={() => scrollToSection(item.id)}
-                  className="text-white/80 hover:text-white text-left py-2 transition-colors"
+                  className="text-white/80 hover:text-white text-left py-2 transition-colors outline-none focus-visible:text-[#f59e0b]"
                 >
                   {item.label}
                 </button>

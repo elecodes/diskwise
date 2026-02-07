@@ -157,7 +157,7 @@ export function DashboardDemo() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Section Header */}
-        <div className="text-center mb-12 reveal opacity-0 translate-y-8 transition-all duration-700">
+        <div className="text-center mb-12 reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700">
           <h2 className="text-4xl sm:text-5xl font-bold text-white mb-4">
             See It In <span className="text-gradient">Action</span>
           </h2>
@@ -167,7 +167,7 @@ export function DashboardDemo() {
         </div>
 
         {/* Dashboard */}
-        <div className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-200 bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl glass-reflection">
+        <div className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-200 bg-white/[0.02] backdrop-blur-xl rounded-2xl border border-white/10 overflow-hidden shadow-2xl glass-reflection">
           {/* Dashboard Header */}
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/10 gap-4 bg-white/[0.01]">
             <div className="flex items-center gap-4">
@@ -182,10 +182,11 @@ export function DashboardDemo() {
             <button
               onClick={handleScan}
               disabled={isScanning}
-              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-all disabled:opacity-50 shimmer ${!isScanning ? 'glass-reflection' : ''}`}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg bg-[#f59e0b]/10 text-[#f59e0b] border border-[#f59e0b]/20 hover:bg-[#f59e0b]/20 transition-[background-color,opacity] disabled:opacity-50 shimmer outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] ${!isScanning ? 'glass-reflection' : ''}`}
+              aria-label={isScanning ? "Scanning in progress" : "Rescan System"}
             >
-              <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} />
-              {isScanning ? 'Scanning...' : 'Rescan System'}
+              <RefreshCw className={`w-4 h-4 ${isScanning ? 'animate-spin' : ''}`} aria-hidden="true" />
+              {isScanning ? 'Scanning…' : 'Rescan System'}
             </button>
           </div>
 
@@ -224,11 +225,13 @@ export function DashboardDemo() {
                     <button
                       key={f}
                       onClick={() => setFilter(f)}
-                      className={`px-3 py-1.5 rounded-lg text-sm capitalize transition-colors ${
+                      className={`px-3 py-1.5 rounded-lg text-sm capitalize transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] ${
                         filter === f
                           ? 'bg-[#f59e0b] text-white'
                           : 'bg-white/5 text-gray-400 hover:bg-white/10'
                       }`}
+                      aria-label={`Filter by ${f}`}
+                      aria-pressed={filter === f}
                     >
                       {f}
                     </button>
@@ -256,17 +259,19 @@ export function DashboardDemo() {
                 {filteredFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/[0.04] backdrop-blur-0 hover:backdrop-blur-md transition-all duration-300 border-b border-white/5 last:border-0 group cursor-default transform hover:scale-[1.002]"
+                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/[0.04] backdrop-blur-0 hover:backdrop-blur-md transition-[background-color,backdrop-filter,transform] duration-300 border-b border-white/5 last:border-0 group cursor-default transform hover:scale-[1.002]"
                   >
                     <div className="col-span-1">
                       <button
                         onClick={() => toggleFile(file.id)}
-                        className="text-gray-400 hover:text-[#f59e0b] transition-colors"
+                        className="text-gray-400 hover:text-[#f59e0b] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] rounded"
+                        aria-label={selectedFiles.has(file.id) ? `Deselect ${file.name}` : `Select ${file.name}`}
+                        aria-pressed={selectedFiles.has(file.id)}
                       >
                         {selectedFiles.has(file.id) ? (
-                          <CheckSquare className="w-4 h-4 text-[#f59e0b]" />
+                          <CheckSquare className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
                         ) : (
-                          <Square className="w-4 h-4" />
+                          <Square className="w-4 h-4" aria-hidden="true" />
                         )}
                       </button>
                     </div>
@@ -299,12 +304,12 @@ export function DashboardDemo() {
                     <span className="text-gray-300">)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 transition-all font-medium text-sm">
-                      <Minimize2 className="w-4 h-4" />
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-green-500">
+                      <Minimize2 className="w-4 h-4" aria-hidden="true" />
                       Compress
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-all font-medium text-sm">
-                      <Trash2 className="w-4 h-4" />
+                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                      <Trash2 className="w-4 h-4" aria-hidden="true" />
                       Delete
                     </button>
                   </div>

@@ -7,7 +7,7 @@ const steps = [
     icon: Search,
     title: 'Scan Your Disk',
     description:
-      'Select folders to scan. DiskWise analyzes every file with intelligent classification, identifying what\'s taking up space.',
+      'Select folders to scan. DiskWise analyzes every file with intelligent classification, identifying what’s taking up space.',
     color: '#f59e0b',
   },
   {
@@ -15,7 +15,7 @@ const steps = [
     icon: Eye,
     title: 'Review Results',
     description:
-      'See what\'s taking up space at a glance. Green means safe to delete, yellow means review, red means keep.',
+      'See what’s taking up space at a glance. Green means safe to delete, yellow means review, red means keep.',
     color: '#ffc107',
   },
   {
@@ -23,7 +23,7 @@ const steps = [
     icon: Trash2,
     title: 'Clean Up',
     description:
-      'One click to free up space. Delete or compress - you\'re always in control of what gets removed.',
+      'One click to free up space. Delete or compress — you’re always in control of what gets removed.',
     color: '#4caf50',
   },
 ];
@@ -87,7 +87,7 @@ export function HowItWorks() {
               return (
                 <div
                   key={step.number}
-                  className={`step-item opacity-0 translate-y-8 transition-all duration-700 relative flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-0 ${
+                  className={`step-item opacity-0 translate-y-8 transition-[opacity,transform] duration-700 relative flex flex-col sm:flex-row items-start sm:items-center gap-6 sm:gap-0 ${
                     isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'
                   }`}
                   style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}

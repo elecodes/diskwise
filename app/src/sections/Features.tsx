@@ -6,14 +6,14 @@ const features = [
     icon: Search,
     title: 'Intelligent Scanning',
     description:
-      'Advanced algorithms identify safe-to-delete files with 99.9% accuracy. No more guessing what\'s safe to remove.',
+      'Advanced algorithms identify safe-to-delete files with 99.9% accuracy. No more guessing what’s safe to remove.',
     color: '#f59e0b',
   },
   {
     icon: Shield,
     title: 'Safe to Delete',
     description:
-      'Color-coded safety indicators show exactly what\'s safe to delete, what needs review, and what to keep.',
+      'Color-coded safety indicators show exactly what’s safe to delete, what needs review, and what to keep.',
     color: '#10b981',
   },
   {
@@ -86,13 +86,13 @@ export function Features() {
             return (
               <div
                 key={feature.title}
-                className="feature-card opacity-0 translate-y-12 transition-all duration-700 group"
+                className="feature-card opacity-0 translate-y-12 transition-[opacity,transform] duration-700 group"
                 style={{
                   transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)',
                   transitionDelay: `${index * 100}ms`,
                 }}
               >
-                <div className="relative h-full p-8 rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-[#f59e0b]/50 transition-all duration-300 card-hover">
+                <div className="relative h-full p-8 rounded-2xl bg-[#0a0a0a] border border-white/5 hover:border-[#f59e0b]/50 transition-[border-color,box-shadow,transform] duration-300 card-hover outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-offset-2 focus-visible:ring-offset-black" tabIndex={0} role="article" aria-labelledby={`feature-title-${index}`}>
                   {/* Icon */}
                   <div
                     className="w-14 h-14 rounded-xl flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
@@ -105,7 +105,7 @@ export function Features() {
                   </div>
 
                   {/* Content */}
-                  <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
+                  <h3 id={`feature-title-${index}`} className="text-xl font-bold text-white mb-3">{feature.title}</h3>
                   <p className="text-gray-400 leading-relaxed">{feature.description}</p>
 
                   {/* Hover Glow */}

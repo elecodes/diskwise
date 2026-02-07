@@ -60,14 +60,14 @@ export function DownloadSection() {
 
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
         {/* Headline */}
-        <h2 className="reveal opacity-0 translate-y-8 transition-all duration-700 text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
+        <h2 className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
           Ready to Clean Your{' '}
           <span className="text-gradient">Disk</span>?
         </h2>
 
         {/* Subheadline */}
         <p
-          className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-100 text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto"
+          className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-100 text-lg sm:text-xl text-gray-400 mb-10 max-w-2xl mx-auto"
           style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         >
           Download DiskWise for free and reclaim your storage space today. No ads,
@@ -76,7 +76,7 @@ export function DownloadSection() {
 
         {/* Feature List */}
         <div
-          className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-200 flex flex-wrap justify-center gap-4 mb-10"
+          className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-200 flex flex-wrap justify-center gap-4 mb-10"
           style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         >
           {features.map((feature) => (
@@ -92,30 +92,31 @@ export function DownloadSection() {
 
         {/* CTA Button */}
         <div
-          className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-300 mb-12"
+          className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-300 mb-12"
           style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         >
           <button
-            className="relative group"
+            className="relative group outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-offset-8 focus-visible:ring-offset-black rounded-xl"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
+            aria-label="Download DiskWise for your platform"
           >
             <div
               className={`absolute inset-0 rounded-xl bg-[#f59e0b] blur-xl transition-opacity duration-300 ${
                 isHovered ? 'opacity-60' : 'opacity-30'
               }`}
             />
-            <div className="relative px-12 py-5 rounded-xl bg-[#f59e0b] text-white font-bold text-lg flex items-center gap-3 transition-transform duration-300 group-hover:scale-105">
+            <div className="relative px-12 py-5 rounded-xl bg-[#f59e0b] text-white font-bold text-lg flex items-center gap-3 transition-transform duration-300 group-hover:scale-105 group-active:scale-95">
               <Download className="w-6 h-6" />
               Download Now
             </div>
           </button>
-          <p className="mt-4 text-sm text-gray-500">v2.1.0 • Released Jan 2025</p>
+          <p className="mt-4 text-sm text-gray-500">v2.1.0 • Released Jan&nbsp;2025</p>
         </div>
 
         {/* Platform Icons */}
         <div
-          className="reveal opacity-0 translate-y-8 transition-all duration-700 delay-400"
+          className="reveal opacity-0 translate-y-8 transition-[opacity,transform] duration-700 delay-400"
           style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         >
           <p className="text-sm text-gray-500 mb-4">Available for</p>
@@ -127,7 +128,7 @@ export function DownloadSection() {
                   key={platform.label}
                   className="group flex flex-col items-center gap-2"
                 >
-                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center transition-all duration-300 group-hover:bg-[#f59e0b]/20 group-hover:scale-110">
+                  <div className="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center transition-[background-color,transform] duration-300 group-hover:bg-[#f59e0b]/20 group-hover:scale-110">
                     <Icon className="w-6 h-6 text-gray-400 transition-colors duration-300 group-hover:text-[#f59e0b]" />
                   </div>
                   <div className="text-center">

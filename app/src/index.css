@@ -6,6 +6,7 @@
   :root {
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
+    color-scheme: dark;
     --card: 0 0% 10%;
     --card-foreground: 0 0% 100%;
     --popover: 0 0% 5%;
@@ -57,6 +58,7 @@
   
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Montserrat', sans-serif;
+    text-wrap: balance;
   }
 }
 
@@ -88,7 +90,7 @@
   }
   
   .btn-primary {
-    @apply px-8 py-4 bg-[#f59e0b] text-white font-semibold rounded-lg transition-all duration-300;
+    @apply px-8 py-4 bg-[#f59e0b] text-white font-semibold rounded-lg transition-[transform,box-shadow] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-[#f59e0b] focus-visible:ring-offset-black;
   }
   
   .btn-primary:hover {
@@ -97,7 +99,7 @@
   }
   
   .btn-secondary {
-    @apply px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg transition-all duration-300;
+    @apply px-8 py-4 border-2 border-white/30 text-white font-semibold rounded-lg transition-[border-color,text-color,transform] duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-white focus-visible:ring-offset-black;
   }
   
   .btn-secondary:hover {

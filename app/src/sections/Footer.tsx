@@ -19,10 +19,11 @@ export function Footer() {
               <a
                 key={link}
                 href="#"
-                className="text-sm text-gray-400 hover:text-[#f59e0b] transition-colors relative group"
+                className="text-sm text-gray-400 hover:text-[#f59e0b] transition-colors relative group outline-none focus-visible:text-[#f59e0b]"
+                aria-label={`Go to ${link}`}
               >
                 {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f59e0b] transition-all duration-200 group-hover:w-full" />
+                <span className="absolute -bottom-1 left-0 w-0 h-px bg-[#f59e0b] transition-[width] duration-200 group-hover:w-full" />
               </a>
             ))}
           </div>
@@ -32,13 +33,15 @@ export function Footer() {
             <div className="flex items-center gap-3">
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-[background-color,color] outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b]"
+                aria-label="Follow us on GitHub"
               >
                 <Github className="w-4 h-4" />
               </a>
               <a
                 href="#"
-                className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-all"
+                className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-gray-400 hover:text-white hover:bg-white/10 transition-[background-color,color] outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b]"
+                aria-label="Follow us on Twitter"
               >
                 <Twitter className="w-4 h-4" />
               </a>

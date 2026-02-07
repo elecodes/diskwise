@@ -14,6 +14,7 @@ import {
 import { api, type DiskUsage, type ScanResult } from '../lib/api';
 import { SafetyBadge } from '@/components/SafetyBadge';
 import { DiskChart } from '@/components/DiskChart';
+import { FileDetails } from '@/components/FileDetails';
 
 export function DashboardDemo() {
   const [isScanning, setIsScanning] = useState(false);
@@ -21,6 +22,7 @@ export function DashboardDemo() {
   const [scanResult, setScanResult] = useState<ScanResult | null>(null);
   const [filter, setFilter] = useState<'all' | 'safe' | 'warning' | 'danger'>('all');
   const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [viewingFile, setViewingFile] = useState<any | null>(null);
   const [error, setError] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
@@ -76,6 +78,12 @@ export function DashboardDemo() {
     } finally {
       setIsScanning(false);
     }
+  };
+
+  const handleFileClick = (file: any, e: React.MouseEvent) => {
+    // If clicking checkbox, don't open details
+    if ((e.target as HTMLElement).closest('.checkbox-btn')) return;
+    setViewingFile(file);
   };
 
   const toggleFile = (id: string) => {
@@ -287,12 +295,16 @@ export function DashboardDemo() {
                 {filteredFiles.map((file) => (
                   <div
                     key={file.id}
-                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/[0.04] backdrop-blur-0 hover:backdrop-blur-md transition-[background-color,backdrop-filter,transform] duration-300 border-b border-white/5 last:border-0 group cursor-default transform hover:scale-[1.002]"
+                    onClick={(e) => handleFileClick(file, e)}
+                    className="grid grid-cols-12 gap-4 px-4 py-3 items-center hover:bg-white/[0.04] backdrop-blur-0 hover:backdrop-blur-md transition-[background-color,backdrop-filter,transform] duration-300 border-b border-white/5 last:border-0 group cursor-pointer transform hover:scale-[1.002]"
                   >
                     <div className="col-span-1">
                       <button
-                        onClick={() => toggleFile(file.id)}
-                        className="text-gray-400 hover:text-[#f59e0b] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] rounded"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleFile(file.id);
+                        }}
+                        className="checkbox-btn text-gray-400 hover:text-[#f59e0b] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] rounded"
                         aria-label={selectedFiles.has(file.id) ? `Deselect ${file.name}` : `Select ${file.name}`}
                         aria-pressed={selectedFiles.has(file.id)}
                       >
@@ -311,7 +323,7 @@ export function DashboardDemo() {
                           ) : (
                             <File className="w-4 h-4 text-gray-500" />
                           )}
-                          <span className="text-white truncate" title={file.name}>{file.name}</span>
+                          <span className="text-white truncate" title={file.path}>{file.name}</span>
                         </div>
                         <div className="col-span-2 text-sm text-gray-500 truncate">{file.category}</div>
                         <div className="col-span-2 text-sm text-gray-400">{formatSize(file.size)}</div>
@@ -360,6 +372,12 @@ export function DashboardDemo() {
           </div>
         </div>
       </div>
+
+      <FileDetails 
+        file={viewingFile} 
+        isOpen={!!viewingFile} 
+        onClose={() => setViewingFile(null)} 
+      />
 
       <style>{`
         .reveal.animate-in {

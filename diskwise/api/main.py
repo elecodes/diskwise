@@ -7,6 +7,8 @@ Delegates logic to infra (I/O) and core (rules) layers.
 
 import os
 import shutil
+import platform
+import subprocess
 from pathlib import Path
 from typing import List, Optional
 
@@ -167,20 +169,30 @@ async def scan_api_path(
     }
 
     for metadata in scan_path(target_path, max_depth):
-        total_size += metadata.size
+        is_dir = metadata.path.is_dir()
         
+        # Determine if this item should be counted in totals
+        # We only count files, OR directories that are at the max_depth (leaves of our scan)
+        # This prevents double-counting directores and their children.
+        depth = len(metadata.path.relative_to(target_path).parts)
+        is_leaf = is_dir and depth == max_depth
+        
+        if not is_dir or is_leaf:
+            total_size += metadata.size
+            
+            # Category analysis
+            category = get_file_category(metadata.path)
+            category_sizes[category] = category_sizes.get(category, 0) + metadata.size
+
         # Safety analysis
         safety_status = determine_safety_status(metadata, python_installed)
         if safety_status == "safe":
-            safe_to_delete_size += metadata.size
-        elif safety_status in ["warning", "unknown"] and metadata.path.is_file():
+            # Only count safe size for leaves/files to avoid double counting
+            if not is_dir or is_leaf:
+                safe_to_delete_size += metadata.size
+        elif safety_status in ["warning", "unknown"] and not is_dir:
             compressible_size += metadata.size
             
-        # Category analysis
-        category = get_file_category(metadata.path)
-        category_sizes[category] = category_sizes.get(category, 0) + metadata.size
-        
-        is_dir = metadata.path.is_dir()
         children_count = None
         if is_dir:
             try:
@@ -195,7 +207,7 @@ async def scan_api_path(
             size=metadata.size,
             type="directory" if is_dir else "file",
             safety_status=safety_status,
-            category=category,
+            category=get_file_category(metadata.path),
             children_count=children_count
         ))
     
@@ -257,6 +269,27 @@ async def check_python_installed_api() -> dict:
         "installed": python_path is not None,
         "path": python_path
     }
+
+
+@app.post("/api/open-path")
+async def open_path_api(path: str = Query(..., description="Path to open")) -> dict:
+    """Open a file or directory in the system's default file manager."""
+    try:
+        target_path = sanitize_path(path)
+        if not target_path.exists():
+            raise HTTPException(status_code=404, detail="Path not found")
+        
+        system = platform.system()
+        if system == "Darwin":  # macOS
+            subprocess.run(["open", str(target_path)], check=True)
+        elif system == "Windows":
+            os.startfile(str(target_path))
+        else:  # Linux and others
+            subprocess.run(["xdg-open", str(target_path)], check=True)
+            
+        return {"status": "success", "message": f"Opened {path}"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to open path: {str(e)}")
 
 
 if __name__ == "__main__":

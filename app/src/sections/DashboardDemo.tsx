@@ -95,7 +95,12 @@ export function DashboardDemo() {
     try {
       const result = await api.deleteItems(paths);
       if (result.status === 'success') {
-        toast.success(`Successfully deleted ${result.deleted.length} items`);
+        if (result.deleted.length === 1) {
+          const fileName = result.deleted[0].split('/').pop();
+          toast.success(`file "${fileName}" deleted`);
+        } else {
+          toast.success(`Successfully deleted ${result.deleted.length} items`);
+        }
       } else if (result.errors?.length > 0) {
         toast.error(`Failed to delete some items: ${result.errors[0].error}`);
       }

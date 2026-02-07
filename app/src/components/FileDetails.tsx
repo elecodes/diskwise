@@ -91,7 +91,7 @@ export function FileDetails({ file, isOpen, onClose, onRefresh }: FileDetailsPro
     setIsProcessing(true);
     try {
       await api.deleteItems([file.path], isWarning);
-      toast.success('File deleted successfully');
+      toast.success(`file "${file.name}" deleted`);
       onRefresh();
       onClose();
     } catch (err: any) {

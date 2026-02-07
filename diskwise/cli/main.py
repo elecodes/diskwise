@@ -140,6 +140,59 @@ def run_check(args):
         print("Recommendation: Unknown risk. Manual review required.")
 
 
+def run_delete(args):
+    """Execution logic for the 'delete' command."""
+    from infra.manager import delete_path
+    from infra.scanner import calculate_directory_size
+
+    try:
+        target_path = sanitize_path(args.path)
+    except ValueError as e:
+        print(f"Error: {e}")
+        return
+
+    if not target_path.exists():
+        print(f"Error: Path '{target_path}' does not exist.")
+        return
+
+    # Perform safety check first to show status
+    python_installed = shutil.which("python") is not None
+    is_dir = target_path.is_dir()
+    size = calculate_directory_size(target_path) if is_dir else target_path.stat().st_size
+    metadata = FileMetadata(path=target_path, name=target_path.name, size=size)
+    status = determine_safety_status(metadata, python_installed)
+
+    if status == "danger":
+        print(f"CRITICAL Error: Deletion of system path '{target_path}' is forbidden.")
+        return
+
+    if status == "warning" and not args.force:
+        print(f"Warning: '{target_path}' requires review.")
+        confirm = input("Are you sure you want to delete this? [y/N]: ")
+        if confirm.lower() != 'y':
+            print("Operation cancelled.")
+            return
+
+    if not args.force and status != "safe":
+        # Extra confirmation for non-safe items even if not warning/danger
+        confirm = input(f"Delete {target_path}? [y/N]: ")
+        if confirm.lower() != 'y':
+            print("Operation cancelled.")
+            return
+
+    if args.dry_run:
+        print(f"[DRY RUN] Would delete: {target_path}")
+        return
+
+    try:
+        if delete_path(str(target_path), force=args.force):
+            print(f"file \"{target_path.name}\" deleted")
+        else:
+            print(f"Failed to delete \"{target_path.name}\"")
+    except Exception as e:
+        print(f"Error: {e}")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Diskwise - Safe Disk Cleanup CLI",
@@ -157,12 +210,20 @@ def main():
     check_parser = subparsers.add_parser("check", help="Check safety status of a specific path")
     check_parser.add_argument("path", help="Path to check")
 
+    # Delete command
+    delete_parser = subparsers.add_parser("delete", help="Safely delete a file or directory")
+    delete_parser.add_argument("path", help="Path to delete")
+    delete_parser.add_argument("--force", "-f", action="store_true", help="Bypass safety warnings")
+    delete_parser.add_argument("--dry-run", action="store_true", help="Preview deletion without taking action")
+
     args = parser.parse_args()
 
     if args.command == "scan":
         run_scan(args)
     elif args.command == "check":
         run_check(args)
+    elif args.command == "delete":
+        run_delete(args)
     else:
         parser.print_help()
 

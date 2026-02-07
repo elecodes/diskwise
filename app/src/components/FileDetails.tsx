@@ -88,11 +88,11 @@ export function FileDetails({ file, isOpen, onClose, onRefresh }: FileDetailsPro
       
     if (!confirm(message)) return;
 
-    const toastId = toast.loading(`deleting "${file.name}"...`);
+    const toastId = toast.loading('deleting');
     setIsProcessing(true);
     try {
       await api.deleteItems([file.path], isWarning);
-      toast.success(`file "${file.name}" has been deleted`, { id: toastId });
+      toast.success(`file "${file.name}" deleted`, { id: toastId });
       onRefresh();
       onClose();
     } catch (err: any) {

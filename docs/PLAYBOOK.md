@@ -55,11 +55,16 @@ When you finish a meaningful change:
 
 To ensure consistency, follow these procedures to run the different components of **diskwise**.
 
-### A. The CLI Tool
+### A. Using the Development Script (Recommended)
+The fastest way to get both the dashboard and API running.
+1. In the root directory: `bash dev.sh`
+2. This script automates dependency checks, environment variables, and launches both services.
+
+### B. The CLI Tool
 Use the CLI for quick scans and security checks on specific paths.
-1.  Navigate to the module: `cd diskwise`
-2.  Set path: `export PYTHONPATH=.`
-3.  Execute: `python3 cli/main.py scan --path /tmp` (or `check`)
+1. Navigate to the module root.
+2. Set path: `export PYTHONPATH="$PYTHONPATH:$(pwd)/diskwise"`
+3. Execute: `python3 diskwise/cli/main.py scan --path /tmp` (or `check`)
 
 ### B. The REST API
 The API must be running for the Web Dashboard to function.

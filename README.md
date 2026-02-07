@@ -25,27 +25,24 @@ docs/           # In-depth Architecture, ADRs, and Playbook
 
 ## 💻 Quick Start
 
-### 1. The CLI Tool (Fast & Local)
+The easiest way to start both the backend API and the web dashboard is by using the development script:
+
 ```bash
-cd diskwise
-export PYTHONPATH=.
-python3 cli/main.py scan --path ~
+bash dev.sh
 ```
 
-### 2. The Web Dashboard (Premium Experience)
-To run the full visual interface, ensure the API and the App are both running:
+### Accessing the Interfaces
+- **Web Dashboard**: [http://localhost:5173](http://localhost:5173) (or 5174 depending on availability)
+- **REST API**: [http://localhost:8000](http://localhost:8000)
 
-**A. Start Backend API:**
-```bash
-cd diskwise
-export PYTHONPATH=.
-python3 api/main.py   # running at http://localhost:8000
-```
+### Using the CLI
+You can also use the CLI directly for quick scans and deletions. Ensure you set the `PYTHONPATH` correctly:
 
-**B. Start Frontend App:**
 ```bash
-cd app
-npm run dev           # running at http://localhost:5173
+# In the project root
+export PYTHONPATH="$PYTHONPATH:$(pwd)/diskwise"
+python3 diskwise/cli/main.py scan --path ~
+python3 diskwise/cli/main.py delete ./old_file.txt
 ```
 
 ## 🎨 Premium Aesthetic (Amber & Emerald)

@@ -92,10 +92,7 @@ export function DashboardDemo() {
 
     if (!confirm(`Are you sure you want to delete ${paths.length} items? This action cannot be undone.`)) return;
 
-    const toastId = toast.loading(paths.length === 1 
-      ? `deleting "${paths[0].split('/').pop()}"...`
-      : `deleting ${paths.length} items...`
-    );
+    const toastId = toast.loading('deleting');
 
     setIsDeleting(true);
     try {
@@ -103,7 +100,7 @@ export function DashboardDemo() {
       if (result.status === 'success') {
         if (result.deleted.length === 1) {
           const fileName = result.deleted[0].split('/').pop();
-          toast.success(`file "${fileName}" has been deleted`, { id: toastId });
+          toast.success(`file "${fileName}" deleted`, { id: toastId });
         } else {
           toast.success(`Successfully deleted ${result.deleted.length} items`, { id: toastId });
         }

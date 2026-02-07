@@ -184,10 +184,10 @@ def run_delete(args):
         print(f"[DRY RUN] Would delete: {target_path}")
         return
 
-    print(f"deleting \"{target_path.name}\"...")
+    print("deleting")
     try:
         if delete_path(str(target_path), force=args.force):
-            print(f"file \"{target_path.name}\" has been deleted")
+            print(f"file \"{target_path.name}\" deleted")
         else:
             print(f"Failed to delete \"{target_path.name}\"")
     except Exception as e:
@@ -203,7 +203,7 @@ def main():
 
     # Scan command
     scan_parser = subparsers.add_parser("scan", help="Scan directory for cleanup targets")
-    scan_parser.add_argument("--path", "-p", default="~", help="Directory to scan (default: ~)")
+    scan_parser.add_argument("path", nargs="?", default="~", help="Directory to scan (default: ~)")
     scan_parser.add_argument("--max-depth", "-d", type=int, default=2, help="Max recursion depth (default: 2)")
     scan_parser.add_argument("--dry-run", action="store_true", help="Preview actions without making changes")
 

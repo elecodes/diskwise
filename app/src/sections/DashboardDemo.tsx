@@ -1,103 +1,27 @@
 import { useState, useEffect, useRef } from 'react';
 import {
-  FolderOpen,
-  FileText,
+  RefreshCw,
+  Search,
   Trash2,
-  Minimize2,
   CheckSquare,
   Square,
-  Search,
-  RefreshCw,
+  HardDrive,
+  File,
+  Folder,
+  Minimize2,
+  AlertCircle,
 } from 'lucide-react';
+import { api, type DiskUsage, type ScanResult } from '../lib/api';
 import { SafetyBadge } from '@/components/SafetyBadge';
-import { FileSize } from '@/components/FileSize';
 import { DiskChart } from '@/components/DiskChart';
-import type { FileItem } from '@/types';
-
-// Mock data for the demo
-const mockFiles: FileItem[] = [
-  {
-    id: '1',
-    name: '__pycache__',
-    path: '/home/user/project/__pycache__',
-    size: 2147483648,
-    type: 'directory',
-    safetyStatus: 'safe',
-    category: 'Python Cache',
-  },
-  {
-    id: '2',
-    name: 'node_modules',
-    path: '/home/user/project/node_modules',
-    size: 5368709120,
-    type: 'directory',
-    safetyStatus: 'safe',
-    category: 'Dependencies',
-  },
-  {
-    id: '3',
-    name: 'temp.log',
-    path: '/var/log/temp.log',
-    size: 1073741824,
-    type: 'file',
-    safetyStatus: 'safe',
-    category: 'Log Files',
-  },
-  {
-    id: '4',
-    name: 'Documents',
-    path: '/home/user/Documents',
-    size: 8589934592,
-    type: 'directory',
-    safetyStatus: 'warning',
-    category: 'User Files',
-  },
-  {
-    id: '5',
-    name: 'System',
-    path: '/System',
-    size: 16106127360,
-    type: 'directory',
-    safetyStatus: 'danger',
-    category: 'System',
-  },
-  {
-    id: '6',
-    name: '.pytest_cache',
-    path: '/home/user/project/.pytest_cache',
-    size: 524288000,
-    type: 'directory',
-    safetyStatus: 'safe',
-    category: 'Test Cache',
-  },
-  {
-    id: '7',
-    name: 'Downloads',
-    path: '/home/user/Downloads',
-    size: 4294967296,
-    type: 'directory',
-    safetyStatus: 'warning',
-    category: 'Downloads',
-  },
-];
-
-const diskData = {
-  total: 512 * 1024 * 1024 * 1024, // 512 GB
-  used: 384 * 1024 * 1024 * 1024, // 384 GB
-  free: 128 * 1024 * 1024 * 1024, // 128 GB
-  categories: [
-    { name: 'System', size: 16106127360, color: '#f44336' },
-    { name: 'Applications', size: 42949672960, color: '#2196f3' },
-    { name: 'Documents', size: 85899345920, color: '#ffc107' },
-    { name: 'Cache/Temp', size: 12884901888, color: '#4caf50' },
-    { name: 'Other', size: 225485783040, color: '#9e9e9e' },
-  ],
-};
 
 export function DashboardDemo() {
-  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
-  const [filter, setFilter] = useState<'all' | 'safe' | 'warning' | 'danger'>('all');
   const [isScanning, setIsScanning] = useState(false);
+  const [diskUsage, setDiskUsage] = useState<DiskUsage | null>(null);
+  const [scanResult, setScanResult] = useState<ScanResult | null>(null);
+  const [filter, setFilter] = useState<'all' | 'safe' | 'warning' | 'danger'>('all');
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [error, setError] = useState<string | null>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -123,6 +47,37 @@ export function DashboardDemo() {
     return () => observer.disconnect();
   }, []);
 
+  // Initial disk usage fetch
+  useEffect(() => {
+    const fetchDiskUsage = async () => {
+      try {
+        const usage = await api.getDiskUsage('~');
+        setDiskUsage(usage);
+      } catch (err) {
+        console.error('Failed to fetch disk usage:', err);
+        setError('Could not connect to the backend API. Please ensure the server is running.');
+      }
+    };
+    fetchDiskUsage();
+  }, []);
+
+  const handleScan = async () => {
+    setIsScanning(true);
+    setError(null);
+    try {
+      // Small artificial delay to show scanning state
+      await new Promise(resolve => setTimeout(resolve, 800));
+      const result = await api.scanPath('~', 2);
+      setScanResult(result);
+      setSelectedFiles(new Set());
+    } catch (err: any) {
+      console.error('Scan failed:', err);
+      setError(err.message || 'An error occurred during scanning.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   const toggleFile = (id: string) => {
     const newSelected = new Set(selectedFiles);
     if (newSelected.has(id)) {
@@ -133,17 +88,34 @@ export function DashboardDemo() {
     setSelectedFiles(newSelected);
   };
 
-  const filteredFiles = mockFiles.filter((file) =>
-    filter === 'all' ? true : file.safetyStatus === filter
-  );
+  const selectAll = () => {
+    if (!scanResult) return;
+    const currentFiles = filteredFiles;
+    if (selectedFiles.size === currentFiles.length) {
+      setSelectedFiles(new Set());
+    } else {
+      setSelectedFiles(new Set(currentFiles.map((f) => f.id)));
+    }
+  };
 
-  const selectedSize = mockFiles
+  const filteredFiles = scanResult?.files.filter((file) => {
+    if (filter === 'all') return true;
+    if (filter === 'safe') return file.safety_status === 'safe';
+    if (filter === 'warning') return file.safety_status === 'warning';
+    if (filter === 'danger') return file.safety_status === 'danger';
+    return true;
+  }) || [];
+
+  const selectedSize = (scanResult?.files || [])
     .filter((f) => selectedFiles.has(f.id))
     .reduce((sum, f) => sum + f.size, 0);
 
-  const handleScan = () => {
-    setIsScanning(true);
-    setTimeout(() => setIsScanning(false), 2000);
+  const formatSize = (bytes: number) => {
+    if (bytes === 0) return '0 GB';
+    const k = 1024;
+    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
   };
 
   return (
@@ -162,8 +134,15 @@ export function DashboardDemo() {
             See It In <span className="text-gradient">Action</span>
           </h2>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            Interactive dashboard showing disk usage and file safety status
+            Try the dashboard demo. Connect to your local system to see actual
+            files safe to delete.
           </p>
+          {error && (
+            <div className="mt-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center gap-3 animate-in fade-in slide-in-from-top-4">
+              <AlertCircle className="w-5 h-5" />
+              <p className="text-sm font-medium">{error}</p>
+            </div>
+          )}
         </div>
 
         {/* Dashboard */}
@@ -172,11 +151,11 @@ export function DashboardDemo() {
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-6 border-b border-white/10 gap-4 bg-white/[0.01]">
             <div className="flex items-center gap-4">
               <div className="w-10 h-10 rounded-lg bg-[#f59e0b] flex items-center justify-center shadow-[0_0_20px_rgba(255,107,53,0.3)] shimmer">
-                <FolderOpen className="w-5 h-5 text-white" />
+                <HardDrive className="w-5 h-5 text-white" />
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-white">Disk Analysis</h3>
-                <p className="text-sm text-gray-500">/home/user</p>
+                <p className="text-sm text-gray-500">{scanResult?.path || '/home/user'}</p>
               </div>
             </div>
             <button
@@ -191,28 +170,57 @@ export function DashboardDemo() {
           </div>
 
           <div className="grid lg:grid-cols-3">
-            {/* Left: Disk Chart */}
+            {/* Left: Charts */}
             <div className="p-6 border-b lg:border-b-0 lg:border-r border-white/10">
-              <DiskChart
-                used={diskData.used}
-                total={diskData.total}
-                categories={diskData.categories}
-              />
+              <div className="flex items-center justify-between mb-6">
+                <div className="text-left">
+                  <h3 className="text-sm text-gray-400 font-medium">System Health</h3>
+                  <div className="text-2xl font-bold text-white flex items-baseline gap-1">
+                    {diskUsage ? `${100 - Math.round(diskUsage.percent_used)}%` : '--%'}
+                    <span className="text-xs text-green-500 font-normal">Optimal</span>
+                  </div>
+                </div>
+              </div>
+              <div className="flex flex-col text-right">
+                <div className="flex gap-4">
+                  <div className="text-right">
+                    <p className="text-xs text-gray-500">Used</p>
+                    <p className="text-sm font-bold text-white">{diskUsage ? formatSize(diskUsage.used) : '-- GB'}</p>
+                  </div>
+                  <div className="text-right border-l border-white/10 pl-4">
+                    <p className="text-xs text-gray-500">Free</p>
+                    <p className="text-sm font-bold text-white">{diskUsage ? formatSize(diskUsage.free) : '-- GB'}</p>
+                  </div>
+                </div>
+              </div>
 
-              {/* Legend */}
-              <div className="mt-6 space-y-2">
-                {diskData.categories.map((cat) => (
-                  <div key={cat.name} className="flex items-center justify-between text-sm">
+              <div className="mb-8 mt-8">
+                <h4 className="text-lg font-bold text-white mb-6">Storage Breakdown</h4>
+                <DiskChart 
+                  used={diskUsage?.used || 0} 
+                  total={diskUsage?.total || 1} 
+                  categories={scanResult?.categories || []} 
+                />
+              </div>
+
+              <div className="space-y-4">
+                {(scanResult?.categories || []).map((cat) => (
+                  <div key={cat.name} className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <div
                         className="w-3 h-3 rounded-full"
                         style={{ backgroundColor: cat.color }}
                       />
-                      <span className="text-gray-400">{cat.name}</span>
+                      <span className="text-sm text-gray-400">{cat.name}</span>
                     </div>
-                    <FileSize bytes={cat.size} className="text-gray-500" />
+                    <span className="text-sm font-bold text-white">{formatSize(cat.size)}</span>
                   </div>
                 ))}
+                {!scanResult && (
+                  <div className="py-8 text-center border-2 border-dashed border-white/5 rounded-xl">
+                    <p className="text-sm text-gray-500 italic">No scan results yet</p>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -220,7 +228,7 @@ export function DashboardDemo() {
             <div className="lg:col-span-2 p-6">
               {/* Filters */}
               <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4">
-                <div className="flex items-center gap-2">
+                <div className="flex gap-2 p-1 bg-white/5 rounded-lg">
                   {(['all', 'safe', 'warning', 'danger'] as const).map((f) => (
                     <button
                       key={f}
@@ -234,6 +242,11 @@ export function DashboardDemo() {
                       aria-pressed={filter === f}
                     >
                       {f}
+                      {selectedFiles.size > 0 && filter === f && (
+                        <span className="text-xs bg-white text-black ml-1.5 px-1.5 py-0.5 rounded-full font-bold">
+                          {selectedFiles.size}
+                        </span>
+                      )}
                     </button>
                   ))}
                 </div>
@@ -246,12 +259,27 @@ export function DashboardDemo() {
               {/* File List Header */}
               <div className="grid grid-cols-12 gap-4 px-4 py-2 text-sm text-gray-500 border-b border-white/5">
                 <div className="col-span-1">
-                  <CheckSquare className="w-4 h-4" />
+                  <button
+                    onClick={selectAll}
+                    className="text-gray-400 hover:text-[#f59e0b] transition-colors outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] rounded"
+                    aria-label={selectedFiles.size === filteredFiles.length ? "Deselect all" : "Select all"}
+                    aria-pressed={selectedFiles.size === filteredFiles.length}
+                  >
+                    {selectedFiles.size === filteredFiles.length && filteredFiles.length > 0 ? (
+                      <CheckSquare className="w-4 h-4 text-[#f59e0b]" aria-hidden="true" />
+                    ) : (
+                      <Square className="w-4 h-4" aria-hidden="true" />
+                    )}
+                  </button>
                 </div>
-                <div className="col-span-5">Name</div>
-                <div className="col-span-2">Category</div>
-                <div className="col-span-2">Size</div>
-                <div className="col-span-2">Status</div>
+                <div className="col-span-11">
+                  <div className="grid grid-cols-11 gap-4">
+                    <div className="col-span-5">Name</div>
+                    <div className="col-span-2">Category</div>
+                    <div className="col-span-2">Size</div>
+                    <div className="col-span-2">Status</div>
+                  </div>
+                </div>
               </div>
 
               {/* File Items */}
@@ -275,23 +303,36 @@ export function DashboardDemo() {
                         )}
                       </button>
                     </div>
-                    <div className="col-span-5 flex items-center gap-2">
-                      {file.type === 'directory' ? (
-                        <FolderOpen className="w-4 h-4 text-[#f59e0b]" />
-                      ) : (
-                        <FileText className="w-4 h-4 text-gray-500" />
-                      )}
-                      <span className="text-white truncate">{file.name}</span>
-                    </div>
-                    <div className="col-span-2 text-sm text-gray-500">{file.category}</div>
-                    <div className="col-span-2">
-                      <FileSize bytes={file.size} className="text-sm text-gray-400" />
-                    </div>
-                    <div className="col-span-2">
-                      <SafetyBadge status={file.safetyStatus} size="sm" />
+                    <div className="col-span-11">
+                      <div className="grid grid-cols-11 gap-4 items-center">
+                        <div className="col-span-5 flex items-center gap-2">
+                          {file.type === 'directory' ? (
+                            <Folder className="w-4 h-4 text-[#f59e0b]" />
+                          ) : (
+                            <File className="w-4 h-4 text-gray-500" />
+                          )}
+                          <span className="text-white truncate" title={file.name}>{file.name}</span>
+                        </div>
+                        <div className="col-span-2 text-sm text-gray-500 truncate">{file.category}</div>
+                        <div className="col-span-2 text-sm text-gray-400">{formatSize(file.size)}</div>
+                        <div className="col-span-2">
+                          <SafetyBadge status={file.safety_status} size="sm" />
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))}
+                
+                {filteredFiles.length === 0 && (
+                  <div className="py-20 text-center">
+                    <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-4">
+                      <Search className="w-8 h-8 text-gray-600" />
+                    </div>
+                    <p className="text-gray-400">
+                      {isScanning ? 'Analyzing files…' : scanResult ? 'No files match your filter.' : 'Click "Rescan System" to start analysis.'}
+                    </p>
+                  </div>
+                )}
               </div>
 
               {/* Action Bar */}
@@ -300,7 +341,7 @@ export function DashboardDemo() {
                   <div className="text-sm">
                     <span className="text-white font-semibold">{selectedFiles.size}</span>
                     <span className="text-gray-300 ml-1">items selected (</span>
-                    <FileSize bytes={selectedSize} className="text-[#f59e0b] font-bold inline" />
+                    <span className="text-[#f59e0b] font-bold inline">{formatSize(selectedSize)}</span>
                     <span className="text-gray-300">)</span>
                   </div>
                   <div className="flex items-center gap-2">

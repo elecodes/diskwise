@@ -12,10 +12,19 @@ cleanup() {
     echo -e "\n${BLUE}Shutting down...${NC}"
     kill $BACKEND_PID
     kill $FRONTEND_PID
-    exit
 }
 
-trap cleanup SIGINT
+# Port cleanup function
+cleanup_ports() {
+    echo "Cleaning up ports 8000, 5173, 5174..."
+    lsof -ti:8000,5173,5174 | xargs kill -9 2>/dev/null || true
+}
+
+# Trap SIGINT (Ctrl+C)
+trap "cleanup; cleanup_ports; exit" SIGINT
+
+# Kill existing processes before starting
+cleanup_ports
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT_DIR"

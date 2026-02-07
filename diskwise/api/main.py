@@ -13,6 +13,7 @@ from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, HTTPException, Query
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
@@ -353,6 +354,47 @@ async def open_path_api(path: str = Query(..., description="Path to open")) -> d
         return {"status": "success", "message": f"Opened {path}"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to open path: {str(e)}")
+
+
+@app.get("/api/download-cli")
+async def download_cli():
+    """Create a ZIP of the diskwise CLI folder and serve it for download."""
+    import tempfile
+    import shutil
+    import os
+    
+    # Get the project root (where diskwise folder lives)
+    # __file__ is /.../diskwise/api/main.py
+    # .parent is /.../diskwise/api
+    # .parent.parent is /.../diskwise
+    # .parent.parent.parent is /.../
+    project_root = Path(__file__).resolve().parent.parent.parent
+    diskwise_dir = project_root / "diskwise"
+    
+    if not diskwise_dir.exists():
+        # Fallback for different execution contexts
+        diskwise_dir = Path(__file__).resolve().parent.parent
+        project_root = diskwise_dir.parent
+        
+    if not diskwise_dir.exists() or diskwise_dir.name != "diskwise":
+        raise HTTPException(status_code=404, detail=f"CLI source folder not found at {diskwise_dir}")
+
+    try:
+        # Create a persistent temp file for the zip
+        tmp_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
+        tmp_zip.close()
+        
+        # shutil.make_archive expects: base_name, format, root_dir, base_dir
+        # We want to zip the 'diskwise' folder located in project_root
+        shutil.make_archive(tmp_zip.name.replace(".zip", ""), 'zip', project_root, 'diskwise')
+        
+        return FileResponse(
+            tmp_zip.name, 
+            filename="diskwise_cli.zip", 
+            media_type="application/zip"
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to create download: {str(e)}")
 
 
 if __name__ == "__main__":

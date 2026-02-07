@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { Download, Check, Monitor, Apple } from 'lucide-react';
+import { toast } from 'sonner';
 
 const platforms = [
   { icon: Monitor, label: 'Windows', version: '10/11' },
@@ -96,6 +97,9 @@ export function DownloadSection() {
           style={{ transitionTimingFunction: 'cubic-bezier(0.16, 1, 0.3, 1)' }}
         >
           <button
+            onClick={() => toast.success('Starting Diskwise CLI download...', {
+              description: 'Your download will begin shortly.'
+            })}
             className="relative group outline-none focus-visible:ring-2 focus-visible:ring-[#f59e0b] focus-visible:ring-offset-8 focus-visible:ring-offset-black rounded-xl"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}

@@ -12,7 +12,7 @@ Modern development machines accumulate many gigabytes of unused or temporary fil
 
 ## Vision
 
-diskwise is a **local-only CLI tool** that:
+diskwise is a **local-only tool** that provides both a CLI and a modern Web Dashboard to:
 
 - Scans selected directories.
 - Identifies files and folders that are *likely* safe to delete or compress.
@@ -39,6 +39,6 @@ diskwise **never** deletes files automatically without explicit user confirmatio
 - **Local only**: no network calls, no telemetry, no cloud services.
 - **Safety over aggression**: better to miss some cleanup opportunities than to risk breaking user environments.
 - Not a full backup or sync solution.
-- Not a GUI app (CLI only, at least initially).
+- **Web Dashboard & CLI**: Offers a premium visual experience alongside a robust command-line tool.
 
 ---

@@ -271,6 +271,65 @@ async def check_python_installed_api() -> dict:
     }
 
 
+class ActionRequest(BaseModel):
+    """Request model for destructive actions."""
+    path: Optional[str] = None
+    paths: Optional[List[str]] = None
+    force: bool = False
+
+
+@app.post("/api/delete")
+async def delete_api(request: ActionRequest) -> dict:
+    """Delete one or more files or directories."""
+    from infra.manager import delete_path
+    
+    paths_to_process = request.paths if request.paths else ([request.path] if request.path else [])
+    if not paths_to_process:
+        raise HTTPException(status_code=400, detail="No paths provided")
+        
+    results = []
+    errors = []
+    
+    for p in paths_to_process:
+        try:
+            if delete_path(p, force=request.force):
+                results.append(p)
+        except Exception as e:
+            errors.append({"path": p, "error": str(e)})
+            
+    return {
+        "status": "success" if results else "failed",
+        "deleted": results,
+        "errors": errors
+    }
+
+
+@app.post("/api/compress")
+async def compress_api(request: ActionRequest) -> dict:
+    """Compress one or more files or directories into ZIP archives."""
+    from infra.manager import compress_path
+    
+    paths_to_process = request.paths if request.paths else ([request.path] if request.path else [])
+    if not paths_to_process:
+        raise HTTPException(status_code=400, detail="No paths provided")
+        
+    results = []
+    errors = []
+    
+    for p in paths_to_process:
+        try:
+            archive_path = compress_path(p)
+            results.append({"original": p, "archive": str(archive_path)})
+        except Exception as e:
+            errors.append({"path": p, "error": str(e)})
+            
+    return {
+        "status": "success" if results else "failed",
+        "compressed": results,
+        "errors": errors
+    }
+
+
 @app.post("/api/open-path")
 async def open_path_api(path: str = Query(..., description="Path to open")) -> dict:
     """Open a file or directory in the system's default file manager."""

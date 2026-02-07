@@ -47,6 +47,26 @@ export const api = {
     return response.json();
   },
 
+  async deleteItems(paths: string[], force: boolean = false): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/delete`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paths, force }),
+    });
+    if (!response.ok) throw new Error('Failed to delete items');
+    return response.json();
+  },
+
+  async compressItems(paths: string[]): Promise<any> {
+    const response = await fetch(`${API_BASE_URL}/compress`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ paths }),
+    });
+    if (!response.ok) throw new Error('Failed to compress items');
+    return response.json();
+  },
+
   async checkPythonInstalled(): Promise<{ installed: boolean; path: string | null }> {
     const response = await fetch(`${API_BASE_URL}/python-installed`);
     if (!response.ok) throw new Error('Failed to check Python status');

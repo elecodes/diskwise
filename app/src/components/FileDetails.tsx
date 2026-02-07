@@ -8,6 +8,7 @@ import {
   Info,
   X
 } from 'lucide-react';
+import { api } from '../lib/api';
 import { SafetyBadge } from './SafetyBadge';
 import {
   Drawer,
@@ -17,6 +18,7 @@ import {
   DrawerClose,
 } from './ui/drawer';
 import { toast } from 'sonner';
+import { useState } from 'react';
 
 interface FileItem {
   id: string;
@@ -33,9 +35,11 @@ interface FileDetailsProps {
   file: FileItem | null;
   isOpen: boolean;
   onClose: () => void;
+  onRefresh: () => void;
 }
 
-export function FileDetails({ file, isOpen, onClose }: FileDetailsProps) {
+export function FileDetails({ file, isOpen, onClose, onRefresh }: FileDetailsProps) {
+  const [isProcessing, setIsProcessing] = useState(false);
   if (!file) return null;
 
   const formatSize = (bytes: number) => {
@@ -73,6 +77,41 @@ export function FileDetails({ file, isOpen, onClose }: FileDetailsProps) {
         return 'This file appears to be a user document or system file. Deletion is not recommended.';
       default:
         return 'Safety status unknown. No specific rules matched this file.';
+    }
+  };
+
+  const handleDelete = async () => {
+    const isWarning = file.safety_status === 'warning';
+    const message = isWarning 
+      ? `This file is marked with a WARNING. Are you SURE you want to delete ${file.name}?`
+      : `Are you sure you want to delete ${file.name}?`;
+      
+    if (!confirm(message)) return;
+
+    setIsProcessing(true);
+    try {
+      await api.deleteItems([file.path], isWarning);
+      toast.success('File deleted successfully');
+      onRefresh();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to delete file');
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleCompress = async () => {
+    setIsProcessing(true);
+    try {
+      await api.compressItems([file.path]);
+      toast.success('File compressed successfully');
+      onRefresh();
+      onClose();
+    } catch (err: any) {
+      toast.error(err.message || 'Failed to compress file');
+    } finally {
+      setIsProcessing(false);
     }
   };
 
@@ -168,7 +207,11 @@ export function FileDetails({ file, isOpen, onClose }: FileDetailsProps) {
               </div>
             </button>
 
-            <button className="w-full flex items-center justify-between p-4 rounded-xl bg-white/[0.03] hover:bg-white/5 border border-white/5 transition-[background-color,transform] active:scale-[0.98] group">
+            <button 
+              onClick={handleCompress}
+              disabled={isProcessing}
+              className="w-full flex items-center justify-between p-4 rounded-xl bg-white/[0.03] hover:bg-white/5 border border-white/5 transition-[background-color,transform] active:scale-[0.98] group disabled:opacity-50"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-green-500/10 text-green-500 flex items-center justify-center">
                   <Archive className="w-5 h-5" />
@@ -180,7 +223,11 @@ export function FileDetails({ file, isOpen, onClose }: FileDetailsProps) {
               </div>
             </button>
 
-            <button className="w-full flex items-center justify-between p-4 rounded-xl bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 transition-[background-color,transform] active:scale-[0.98] group text-red-500">
+            <button 
+              onClick={handleDelete}
+              disabled={isProcessing}
+              className="w-full flex items-center justify-between p-4 rounded-xl bg-red-500/5 hover:bg-red-500/10 border border-red-500/10 transition-[background-color,transform] active:scale-[0.98] group text-red-500 disabled:opacity-50"
+            >
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-lg bg-red-500/10 flex items-center justify-center">
                   <Trash2 className="w-5 h-5" />

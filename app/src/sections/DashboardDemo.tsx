@@ -11,6 +11,7 @@ import {
   Minimize2,
   AlertCircle,
 } from 'lucide-react';
+import { toast } from 'sonner';
 import { api, type DiskUsage, type ScanResult } from '../lib/api';
 import { SafetyBadge } from '@/components/SafetyBadge';
 import { DiskChart } from '@/components/DiskChart';
@@ -75,6 +76,54 @@ export function DashboardDemo() {
     } catch (err: any) {
       console.error('Scan failed:', err);
       setError(err.message || 'An error occurred during scanning.');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (selectedFiles.size === 0 || !scanResult) return;
+    
+    const selectedList = Array.from(selectedFiles);
+    const paths = selectedList.map(id => 
+      scanResult.files.find(f => f.id === id)?.path
+    ).filter(Boolean) as string[];
+
+    if (!confirm(`Are you sure you want to delete ${paths.length} items? This action cannot be undone.`)) return;
+
+    setIsScanning(true);
+    try {
+      const result = await api.deleteItems(paths);
+      if (result.status === 'success') {
+        toast.success(`Successfully deleted ${result.deleted.length} items`);
+      } else if (result.errors?.length > 0) {
+        toast.error(`Failed to delete some items: ${result.errors[0].error}`);
+      }
+      handleScan();
+    } catch (err: any) {
+      toast.error(err.message || 'Deletion failed');
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
+  const handleCompress = async () => {
+    if (selectedFiles.size === 0 || !scanResult) return;
+    
+    const selectedList = Array.from(selectedFiles);
+    const paths = selectedList.map(id => 
+      scanResult.files.find(f => f.id === id)?.path
+    ).filter(Boolean) as string[];
+
+    setIsScanning(true);
+    try {
+      const result = await api.compressItems(paths);
+      if (result.status === 'success') {
+        toast.success(`Successfully compressed ${result.compressed.length} items`);
+      }
+      handleScan();
+    } catch (err: any) {
+      toast.error(err.message || 'Compression failed');
     } finally {
       setIsScanning(false);
     }
@@ -357,11 +406,19 @@ export function DashboardDemo() {
                     <span className="text-gray-300">)</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-green-500">
+                    <button 
+                      onClick={handleCompress}
+                      disabled={isScanning}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-500/10 text-green-500 border border-green-500/20 hover:bg-green-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-green-500 disabled:opacity-50"
+                    >
                       <Minimize2 className="w-4 h-4" aria-hidden="true" />
                       Compress
                     </button>
-                    <button className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-red-500">
+                    <button 
+                      onClick={handleDelete}
+                      disabled={isScanning}
+                      className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20 transition-[background-color] font-medium text-sm outline-none focus-visible:ring-2 focus-visible:ring-red-500 disabled:opacity-50"
+                    >
                       <Trash2 className="w-4 h-4" aria-hidden="true" />
                       Delete
                     </button>
@@ -377,6 +434,7 @@ export function DashboardDemo() {
         file={viewingFile} 
         isOpen={!!viewingFile} 
         onClose={() => setViewingFile(null)} 
+        onRefresh={() => handleScan()}
       />
 
       <style>{`

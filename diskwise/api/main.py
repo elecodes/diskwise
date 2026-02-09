@@ -15,6 +15,7 @@ from typing import List, Optional
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
 from pydantic import BaseModel, Field
 
 # Internal imports from new layers
@@ -33,7 +34,27 @@ app = FastAPI(
     version="2.1.0",
 )
 
+# Security Headers Middleware
+class SecureHeadersMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request, call_next):
+        response = await call_next(request)
+        response.headers["Content-Security-Policy"] = (
+            "default-src 'self'; "
+            "script-src 'self' 'unsafe-inline'; "
+            "style-src 'self' 'unsafe-inline'; "
+            "img-src 'self' data:; "
+            "connect-src 'self' http://localhost:8000;"
+        )
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
+app.add_middleware(SecureHeadersMiddleware)
+
 # CORS for frontend communication
+# Only allow specific origins in production, but keeping it flexible for local dev
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -42,8 +63,8 @@ app.add_middleware(
         "http://localhost:3000"
     ],
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 

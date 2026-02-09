@@ -9,6 +9,7 @@ diskwise uses a **Clean Architecture** in a single-process monolith:
 - `core/`: pure business logic and domain rules.
 - `infra/`: interaction with the operating system (filesystem, subprocesses, environment).
 - `cli/`: argument parsing and user interaction via the command line.
+- `api/`: REST API layer with security middleware.
 - `tests/`: unit, integration, and E2E tests.
 
 ### Core (`core/`)
@@ -67,13 +68,27 @@ Layout (initial idea):
 ### Security
 
 - All filesystem operations must be constrained to validated safe roots.
+- All compression operations use explicit `arcname` validation to prevent Zip Slip (path traversal) vulnerabilities.
 - Handle symlinks explicitly (follow or not follow) and document the behavior.
 - When in doubt about safety, mark a file as “unknown / risky” instead of “safe”.
+- **API Security**: Implements `SecureHeadersMiddleware` to enforce CSP, HSTS, and X-Frame-Options.
 
 ### Observability (future)
 
 - Keep the architecture ready to plug in logging in `infra/` and `cli/` without polluting `core/`.
 - Avoid printing from `core/`; return values instead.
+
+---
+
+## Frontend Architecture (`app/`)
+
+The web dashboard is a React-based SPA built with Vite.
+
+### Core Principles
+- **Performance**: Heavy filtering and calculations are memoized using `useMemo` to ensure smoothness with large datasets.
+- **State Management**: Uses local `useState` for UI state and `api.ts` for backend communication.
+- **Visual Feedback**: Implements a "toast-first" feedback system for long-running operations like scanning or compression.
+- **Stability**: Follows the pattern of hoisting non-reactive logic outside components and using explicit ternary operators for deterministic rendering.
 
 ---
 

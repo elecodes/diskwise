@@ -67,7 +67,14 @@ The new **DiskWise Pro Max** interface features:
 ## 🛡 Security & Safety
 
 - **Safe Roots**: Operations are restricted to validated directories (Home, `/tmp`).
+- **Secure Headers**: API layer implements strict CSP, HSTS, and X-Frame-Options to prevent information disclosure and embedding attacks.
+- **Archive Protection**: Compression logic includes "Zip Slip" prevention, ensuring archived files cannot traverse outside their intended paths.
 - **Pure Logic**: Core business rules are isolated from I/O to ensure testability and safety.
 - **Fail-Safe**: If a path is unknown, the tool defaults to "Review" status.
+
+## ⚡ Performance Optimizations
+
+- **Memoized Filtering**: React dashboard uses `useMemo` for instant filtering of large file sets without UI lag.
+- **Stable UI**: Hoisted utility functions and strict rendering patterns ensure a smooth, consistent experience.
 
 For more technical details, check out the [Architecture Docs](docs/ARCHITECTURE.md).

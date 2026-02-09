@@ -16,6 +16,15 @@ import { api, type DiskUsage, type ScanResult } from '../lib/api';
 import { SafetyBadge } from '@/components/SafetyBadge';
 import { DiskChart } from '@/components/DiskChart';
 import { FileDetails } from '@/components/FileDetails';
+import { useMemo } from 'react';
+
+const formatSize = (bytes: number) => {
+  if (bytes === 0) return '0 GB';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
+};
 
 export function DashboardDemo() {
   const [isScanning, setIsScanning] = useState(false);
@@ -123,15 +132,26 @@ export function DashboardDemo() {
       scanResult.files.find(f => f.id === id)?.path
     ).filter(Boolean) as string[];
 
+    if (paths.length === 0) {
+      toast.error('No valid paths found to compress');
+      return;
+    }
+
+    const toastId = toast.loading('Compressing items...');
     setIsScanning(true);
     try {
       const result = await api.compressItems(paths);
       if (result.status === 'success') {
-        toast.success(`Successfully compressed ${result.compressed.length} items`);
+        toast.success(`Successfully compressed ${result.compressed.length} items`, { id: toastId });
+      } else {
+        const errorMsg = result.errors && result.errors.length > 0 
+          ? result.errors[0].error 
+          : 'Compression failed on the server';
+        toast.error(errorMsg, { id: toastId });
       }
-      handleScan();
+      await handleScan();
     } catch (err: any) {
-      toast.error(err.message || 'Compression failed');
+      toast.error(err.message || 'Compression failed', { id: toastId });
     } finally {
       setIsScanning(false);
     }
@@ -163,25 +183,21 @@ export function DashboardDemo() {
     }
   };
 
-  const filteredFiles = scanResult?.files.filter((file) => {
-    if (filter === 'all') return true;
-    if (filter === 'safe') return file.safety_status === 'safe';
-    if (filter === 'warning') return file.safety_status === 'warning';
-    if (filter === 'danger') return file.safety_status === 'danger';
-    return true;
-  }) || [];
+  const filteredFiles = useMemo(() => {
+    return scanResult?.files.filter((file) => {
+      if (filter === 'all') return true;
+      if (filter === 'safe') return file.safety_status === 'safe';
+      if (filter === 'warning') return file.safety_status === 'warning';
+      if (filter === 'danger') return file.safety_status === 'danger';
+      return true;
+    }) || [];
+  }, [scanResult, filter]);
 
-  const selectedSize = (scanResult?.files || [])
-    .filter((f) => selectedFiles.has(f.id))
-    .reduce((sum, f) => sum + f.size, 0);
-
-  const formatSize = (bytes: number) => {
-    if (bytes === 0) return '0 GB';
-    const k = 1024;
-    const sizes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(1))} ${sizes[i]}`;
-  };
+  const selectedSize = useMemo(() => {
+    return (scanResult?.files || [])
+      .filter((f) => selectedFiles.has(f.id))
+      .reduce((sum, f) => sum + f.size, 0);
+  }, [scanResult, selectedFiles]);
 
   return (
     <section
@@ -202,12 +218,12 @@ export function DashboardDemo() {
             Try the dashboard demo. Connect to your local system to see actual
             files safe to delete.
           </p>
-          {error && (
+          {error ? (
             <div className="mt-8 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 flex items-center justify-center gap-3 animate-in fade-in slide-in-from-top-4">
               <AlertCircle className="w-5 h-5" />
               <p className="text-sm font-medium">{error}</p>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* Dashboard */}
@@ -307,11 +323,11 @@ export function DashboardDemo() {
                       aria-pressed={filter === f}
                     >
                       {f}
-                      {selectedFiles.size > 0 && filter === f && (
+                      {selectedFiles.size > 0 && filter === f ? (
                         <span className="text-xs bg-white text-black ml-1.5 px-1.5 py-0.5 rounded-full font-bold">
                           {selectedFiles.size}
                         </span>
-                      )}
+                      ) : null}
                     </button>
                   ))}
                 </div>
@@ -405,7 +421,7 @@ export function DashboardDemo() {
               </div>
 
               {/* Action Bar */}
-              {selectedFiles.size > 0 && (
+              {selectedFiles.size > 0 ? (
                 <div className="mt-4 p-4 rounded-xl bg-gradient-to-r from-[#f59e0b]/20 to-[#f59e0b]/10 border border-[#f59e0b]/30 flex items-center justify-between shadow-lg shadow-[#f59e0b]/5 animate-in fade-in slide-in-from-bottom-2 duration-300">
                   <div className="text-sm">
                     <span className="text-white font-semibold">{selectedFiles.size}</span>
@@ -432,7 +448,7 @@ export function DashboardDemo() {
                     </button>
                   </div>
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>

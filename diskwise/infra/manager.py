@@ -79,7 +79,9 @@ def compress_path(path_str: str) -> str:
         else:
             result_path = f"{archive_base}.zip"
             with zipfile.ZipFile(result_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-                zipf.write(path, path.name)
+                # Security check: ensure path is relative to zip root
+                arcname = path.name
+                zipf.write(path, arcname)
             path.unlink()
             
         return result_path

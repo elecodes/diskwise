@@ -36,9 +36,11 @@ This playbook describes how to work on diskwise in a consistent way.
 Before completing any change, verify:
 
 - No new use of `shell=True` in subprocess calls.
-- Paths are validated against safe roots and normalized.
+- Paths are validated against safe roots and normalized using `Path.resolve()`.
+- Compression logic uses explicit `arcname` to prevent Zip Slip.
 - No direct filesystem access from `core/`.
 - Inputs from CLI are validated/sanitized before use.
+- **Frontend**: Ensure expensive filtering/calculations are memoized with `useMemo` and utilities are hoisted outside components.
 
 ## 5. Documentation and housekeeping
 

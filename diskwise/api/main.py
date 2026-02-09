@@ -384,17 +384,37 @@ async def download_cli():
         tmp_zip = tempfile.NamedTemporaryFile(delete=False, suffix=".zip")
         tmp_zip.close()
         
-        # shutil.make_archive expects: base_name, format, root_dir, base_dir
-        # We want to zip the 'diskwise' folder located in project_root
-        shutil.make_archive(tmp_zip.name.replace(".zip", ""), 'zip', project_root, 'diskwise')
+        # Create a staging area to build the ZIP content
+        staging_dir = Path(tempfile.mkdtemp())
+        
+        # 1. Copy the diskwise core folder
+        shutil.copytree(diskwise_dir, staging_dir / "diskwise")
+        
+        # 2. Add launch scripts if they exist in project root
+        launch_files = ["launch.bat", "launch_mac.command", "requirements.txt"]
+        for f in launch_files:
+            src = project_root / f
+            if src.exists():
+                shutil.copy2(src, staging_dir / f)
+        
+        # 3. Add assets (for the icon)
+        assets_src = project_root / "assets"
+        if assets_src.exists():
+            shutil.copytree(assets_src, staging_dir / "assets")
+
+        # Create the archive from the staging directory
+        shutil.make_archive(tmp_zip.name.replace(".zip", ""), 'zip', staging_dir)
+        
+        # Cleanup staging
+        shutil.rmtree(staging_dir)
         
         return FileResponse(
             tmp_zip.name, 
-            filename="diskwise_cli.zip", 
+            filename="diskwise_premium_v2.1.zip", 
             media_type="application/zip"
         )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Failed to create download: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to create enriched download: {str(e)}")
 
 
 if __name__ == "__main__":

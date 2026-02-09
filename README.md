@@ -35,6 +35,16 @@ bash dev.sh
 - **Web Dashboard**: [http://localhost:5173](http://localhost:5173) (or 5174 depending on availability)
 - **REST API**: [http://localhost:8000](http://localhost:8000)
 
+## 🖥 Desktop Launchers
+
+For a more integrated experience, Diskwise includes native launchers:
+- **macOS**: Double-click `launch_mac.command` in the root folder. You can also use `scripts/create_shortcut.sh` to place a launcher on your Desktop.
+- **Windows**: Double-click `launch.bat` to start the backend and frontend services.
+- **Native App**: If you have `Diskwise.app` in your `/Applications` folder, it provides a specialized macOS icon for easy access.
+
+> [!TIP]
+> If the `Diskwise.app` icon is not appearing correctly, ensure `DiskwiseIcon.icns` is present in `Contents/Resources/` and `Info.plist` is correctly configured.
+
 ### Using the CLI
 You can also use the CLI directly for quick scans and deletions. Ensure you set the `PYTHONPATH` correctly:
 

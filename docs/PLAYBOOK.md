@@ -57,8 +57,12 @@ To ensure consistency, follow these procedures to run the different components o
 
 ### A. Using the Development Script (Recommended)
 The fastest way to get both the dashboard and API running.
-1. In the root directory: `bash dev.sh`
-2. This script automates dependency checks, environment variables, and launches both services.
+1. In the root directory: `bash dev.sh` (or `./launch_mac.command` on macOS, `launch.bat` on Windows).
+2. These scripts automate dependency checks, environment variables, and launches both services.
+3. On macOS, you can run `./scripts/create_shortcut.sh` to create a Desktop icon for one-click access.
+
+> [!NOTE]
+> If using `Diskwise.app`, ensure the custom icon is visible. If not, refer to `README.md` for troubleshooting.
 
 ### B. The CLI Tool
 Use the CLI for quick scans and security checks on specific paths.

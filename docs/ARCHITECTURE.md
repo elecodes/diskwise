@@ -76,3 +76,11 @@ Layout (initial idea):
 - Avoid printing from `core/`; return values instead.
 
 ---
+
+## Launch & Packaging
+
+Diskwise is distributed as a source-based CLI but provides convenience wrappers for desktop use:
+- **Scripts**: `launch_mac.command` (macOS) and `launch.bat` (Windows) provide one-click startup of both FastAPI backend and React frontend.
+- **macOS Bundle**: An optional `Diskwise.app` (Automator-based) wraps the launch script with a custom icon (`DiskwiseIcon.icns`) for a native look and feel.
+
+---

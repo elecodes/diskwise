@@ -34,6 +34,14 @@ diskwise **never** deletes files automatically without explicit user confirmatio
 - “List candidates for compression instead of deletion (e.g. old archives, media, project backups).”
 - “Export a report of potential cleanup targets for manual review.”
 
+## Safety Knowledge: Browser Data
+
+When cleaning up browser-related folders, it's important to distinguish between different types of data:
+
+- **Browser Cache**: (e.g., `Cache`, `Code Cache`, `GPUCache`). **Safe to delete.** These are temporary files and will be recreated as needed. Deleting them is a quick win for disk space.
+- **Cookies & Storage**: (e.g., `Cookies`, `Local Storage`, `IndexedDB`). **Safe but impactful.** Deleting these will free space but will sign you out of most websites and might delete offline data or site preferences.
+
+---
 ## Constraints and non-goals
 
 - **Local only**: no network calls, no telemetry, no cloud services.

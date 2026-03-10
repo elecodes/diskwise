@@ -29,6 +29,7 @@ interface FileItem {
   safety_status: 'safe' | 'warning' | 'danger' | 'unknown';
   category?: string;
   children_count?: number;
+  advice?: string;
 }
 
 interface FileDetailsProps {
@@ -170,7 +171,7 @@ export function FileDetails({ file, isOpen, onClose, onRefresh }: FileDetailsPro
               <span className="text-sm font-semibold">Safety Insights</span>
             </div>
             <p className="text-sm text-gray-400 leading-relaxed">
-              {getSafetyLogic(file.safety_status)}
+              {file.advice || getSafetyLogic(file.safety_status)}
             </p>
           </div>
 

@@ -30,6 +30,31 @@ PYTHON_PKG_INDICATORS: Set[str] = {
     "build",
 }
 
+# Browser cookie and cache patterns (common locations/filenames)
+BROWSER_COOKIE_PATTERNS: Set[str] = {
+    "Cookies",
+    "Cookies-journal",
+    "Web Data",
+    "Web Data-journal",
+    "Local Storage",
+    "Session Storage",
+    "Network Action Predictor",
+    "Cache",
+    "Code Cache",
+    "GPUCache",
+    "IndexedDB",
+    "Service Worker",
+    "VideoDecodeStats",
+}
+
+# Hidden system files that are generally safe to delete
+HIDDEN_SYSTEM_FILES: Set[str] = {
+    ".DS_Store",
+    ".localized",
+    "Thumbs.db",
+    "desktop.ini",
+}
+
 # File patterns that are Python cache files
 PYTHON_CACHE_FILES: Set[str] = {
     ".pyc",
@@ -50,6 +75,24 @@ SYSTEM_PATHS: List[str] = [
     "/etc",
     "/var/root",
 ]
+
+# Sensitive user patterns that are dangerous to delete (security keys, etc.)
+DANGER_PATTERNS: Set[str] = {
+    ".ssh",
+    ".gnupg",
+    ".aws",
+    ".kube",
+    ".docker",
+    "Library/Keychains",
+}
+
+# Sensitive file extensions
+DANGER_EXTENSIONS: Set[str] = {
+    ".key",
+    ".pem",
+    ".pub",
+    ".asc",
+}
 
 # User directories that should be treated with caution
 USER_DOCUMENT_PATHS: List[str] = [
@@ -132,17 +175,66 @@ def determine_safety_status(
 
     # 2. System paths are dangerous
     for sys_path in SYSTEM_PATHS:
-        if sys_path.lower() in path_str:
+        if path_str.startswith(sys_path.lower()):
             return "danger"
+
+    # 2b. Sensitive user patterns/extensions are dangerous
+    if any(p.lower() in path_str for p in DANGER_PATTERNS):
+        return "danger"
+    if any(metadata.name.lower().endswith(ext.lower()) for ext in DANGER_EXTENSIONS):
+        return "danger"
 
     # 3. User documents need review
     for doc_path in USER_DOCUMENT_PATHS:
         if doc_path.lower() in path_str:
             return "warning"
 
-    # 4. Known safe temp/cache locations
+    # 4. Known safe temp/cache locations (including node_modules)
+    if "node_modules" in path_str:
+        return "safe"
+        
     for pattern in SAFE_PATTERNS:
         if pattern in path_str:
             return "safe"
 
+    # 5. Browser cookies
+    for pattern in BROWSER_COOKIE_PATTERNS:
+        if pattern.lower() in path_str.lower():
+            return "safe"
+
+    # 6. Hidden system files
+    if metadata.name in HIDDEN_SYSTEM_FILES:
+        return "safe"
+
     return "unknown"
+
+
+def get_advice(metadata: FileMetadata) -> str:
+    """
+    Provide specific advice for certain file types or paths.
+    """
+    name = metadata.name
+    path_str = str(metadata.path).lower()
+
+    if name in HIDDEN_SYSTEM_FILES:
+        return f"This is a hidden system file ('{name}') used for folder preferences. It is safe to delete, but will be recreated by the OS."
+
+    for pattern in BROWSER_COOKIE_PATTERNS:
+        if pattern.lower() in path_str:
+            if "cache" in pattern.lower():
+                return f"This appears to be browser cache ('{pattern}'). It is safe to delete and will free up space without affecting your logins."
+            return "This appears to be persistent browser data (cookies or storage). Deleting it will free space but will sign you out of websites and may clear site-specific settings."
+
+    if ".pyc" in name or "__pycache__" in path_str:
+        return "Python cache files. Safe to delete; they will be regenerated when you run your code."
+
+    if "node_modules" in path_str:
+        return "Node.js dependencies. Can be deleted and reinstalled using 'npm install'."
+
+    if any(p.lower() in path_str for p in DANGER_PATTERNS):
+        return "This is a sensitive configuration or security directory. Deleting it could break applications or access to services."
+
+    if any(name.lower().endswith(ext.lower()) for ext in DANGER_EXTENSIONS):
+        return "This appears to be a security key or certificate. Deleting it could permanently lock you out of your accounts or servers."
+
+    return ""

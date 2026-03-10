@@ -4,7 +4,7 @@
 
 ## 🚀 Key Features
 
-- **Intelligence-Led Cleanup**: Specifically targets "junk" like Python caches (`__pycache__`), build artifacts, and logs with 99.9% accuracy.
+- **Intelligence-Led Cleanup**: Specifically targets "junk" like Python caches (`__pycache__`), build artifacts, and browser data (cache vs cookies) with 99.9% accuracy.
 - **Visual Safety**: Color-coded indicators (Emerald Green for Safe, Amber for Review) take the guesswork out of cleanup.
 - **Security-First Design**: Enforces strict path validation and prevents traversal attacks (`..`).
 - **Clean Architecture**: A modular monolith following strict separation of concerns (`core`, `infra`, `cli`, `api`).

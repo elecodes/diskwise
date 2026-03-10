@@ -7,6 +7,7 @@ export interface FileItem {
   safety_status: 'safe' | 'warning' | 'danger' | 'unknown';
   category?: string;
   children_count?: number;
+  advice?: string;
 }
 
 export interface DiskUsage {

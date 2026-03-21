@@ -1,11 +1,18 @@
 #!/bin/bash
 set -euo pipefail
 
-PROJECT_DIR="$(cd "$(dirname "$0")/../../.." && pwd)"
-LAUNCH_SCRIPT="$PROJECT_DIR/launch_mac.command"
+SOURCE_ROOT="/Users/elena/Developer/Diskwise_CLI "
+APP_LOCAL_ROOT="$(cd "$(dirname "$0")/../../.." && pwd)"
+LAUNCH_SCRIPT=""
 
-if [[ ! -x "$LAUNCH_SCRIPT" ]]; then
-  osascript -e 'display alert "Diskwise launcher missing" message "Could not find launch_mac.command next to Diskwise.app."'
+if [[ -x "$SOURCE_ROOT/launch_mac.command" ]]; then
+  LAUNCH_SCRIPT="$SOURCE_ROOT/launch_mac.command"
+elif [[ -x "$APP_LOCAL_ROOT/launch_mac.command" ]]; then
+  LAUNCH_SCRIPT="$APP_LOCAL_ROOT/launch_mac.command"
+fi
+
+if [[ -z "$LAUNCH_SCRIPT" ]]; then
+  osascript -e 'display alert "Diskwise launcher missing" message "Could not find launch_mac.command. Rebuild with ./make_app.sh from your current project path."'
   exit 1
 fi
 

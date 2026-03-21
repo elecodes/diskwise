@@ -7,12 +7,15 @@ Accepted
 Diskwise is primarily a source-based CLI tool. However, for a "premium" user experience on macOS, users expect a native application entry point with a custom icon and easy access via the Dock or Applications folder.
 
 ## Decision
-We decided to use an Automator-based Application wrapper (`Diskwise.app`) that executes the unified `launch_mac.command` script. This approach provides:
-1.  **Custom Icons**: Support for `.icns` files via the app bundle's `Resources` folder.
-2.  **Native Feel**: The ability to pin the app to the Dock.
-3.  **Low Friction**: No requirement for complex binary compilation or code signing for local use.
+We use a script-generated native app bundle (`Diskwise.app`) created by `make_app.sh`. The bundle contains a shell launcher executable (`Contents/MacOS/Diskwise`) that opens `launch_mac.command` in Terminal, with explicit backend health checks before the frontend starts.
+
+This approach provides:
+1.  **Reliable Startup**: `launch_mac.command` starts Uvicorn directly and waits for `http://127.0.0.1:8000/` before launching Vite.
+2.  **Dock Integration**: The app can be pinned to the Dock like a native app.
+3.  **Low Friction**: No code signing or binary compilation required for local developer usage.
+4.  **Portable Icon Source**: The Dock icon is sourced from `assets/diskwise_dock_source.png` and copied to `Contents/Resources/DiskwiseDock.png`.
 
 ## Consequences
-- **Maintenance**: Changes to the launch sequence must be synchronized across `dev.sh`, `launch_mac.command`, and eventually the Automator wrapper if the entry point changes.
-- **Icon Caching**: macOS may cache icons aggressively, requiring manual intervention (`touch` + `killall Finder`) after updating the `Info.plist`.
-- **System Permissions**: The bundle requires `NSAppleEventsUsageDescription` and other permissions in `Info.plist` to run background processes and open browser windows.
+- **Maintenance**: Changes to launch behavior must be synchronized across `dev.sh`, `launch_mac.command`, and `make_app.sh`.
+- **Icon Caching**: macOS may cache icons aggressively, requiring manual intervention (`killall Dock`) and re-pinning after icon updates.
+- **Bundle Regeneration**: Any launcher/icon changes require re-running `./make_app.sh` to refresh `Diskwise.app`.

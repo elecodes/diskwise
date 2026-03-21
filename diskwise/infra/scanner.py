@@ -166,7 +166,12 @@ def scan_path(
                 size = 0
                 
                 if is_dir:
-                    size = calculate_directory_size(Path(entry.path))
+                    # Full recursive size calculation on every directory causes
+                    # severe slowdown on large trees (O(n^2)-like behavior).
+                    # We only need full directory sizes at leaf scan depth,
+                    # because API totals count only leaf directories/files.
+                    if current_depth >= max_depth:
+                        size = calculate_directory_size(Path(entry.path))
                 else:
                     size = entry.stat(follow_symlinks=False).st_size
                 

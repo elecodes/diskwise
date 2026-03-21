@@ -40,10 +40,11 @@ bash dev.sh
 For a more integrated experience, Diskwise includes native launchers:
 - **macOS**: Double-click `launch_mac.command` in the root folder. You can also use `scripts/create_shortcut.sh` to place a launcher on your Desktop.
 - **Windows**: Double-click `launch.bat` to start the backend and frontend services.
-- **Native App**: If you have `Diskwise.app` in your `/Applications` folder, it provides a specialized macOS icon for easy access.
+- **Native App**: Run `./make_app.sh` to rebuild `Diskwise.app`, then open it with `open "Diskwise.app"` and pin it in the Dock.
 
 > [!TIP]
-> If the `Diskwise.app` icon is not appearing correctly, ensure `DiskwiseIcon.icns` is present in `Contents/Resources/` and `Info.plist` is correctly configured.
+> `Diskwise.app` now uses a PNG icon (`Contents/Resources/DiskwiseDock.png`) generated from `assets/diskwise_dock_source.png`.
+> If the Dock still shows an old icon, remove/re-add the app in Dock and run `killall Dock`.
 
 ### Using the CLI
 You can also use the CLI directly for quick scans and deletions. Ensure you set the `PYTHONPATH` correctly:
